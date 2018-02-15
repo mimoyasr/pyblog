@@ -14,10 +14,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 from pyblog.db import DATABASES
 
-
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -30,10 +27,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = (
+    'pyapp',
+    'pyblog_app',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,6 +42,8 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -51,6 +52,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+
 )
 
 ROOT_URLCONF = 'pyblog.urls'
@@ -73,18 +75,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pyblog.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.sqlite3',
 #        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #    }
-#}
+# }
 
-#this section has been replaced by a separit file db.py
+# this section has been replaced by a separit file db.py
 
 
 # Internationalization
@@ -100,8 +101,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+CORS_ORIGIN_ALLOW_ALL = True

@@ -15,12 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from pyapp import views
+#from pyapp import views
+from pyblog_app.views import allcategories
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^login_form$',views.login_form),
-    url(r'^logged_in_only$',views.logged_in_only),
-    url(r'^signup/$', views.signup),
+    # url(r'^admin/', include(admin.site.urls)),
+    # url(r'^login_form$',views.login_form),
+    # url(r'^logged_in_only$',views.logged_in_only),
+    # url(r'^signup/$', views.signup),
+    url(r'^wessam/$', allcategories),
 ]
 
