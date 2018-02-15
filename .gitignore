@@ -101,3 +101,4 @@ ENV/
 .mypy_cache/
 .idea/
 pyblog/db.py
+migrations/0001_initial.py
