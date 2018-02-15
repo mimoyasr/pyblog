@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 import datetime
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Post(models.Model):
@@ -28,15 +29,17 @@ class Badwords(models.Model):
 class Comment(models.Model):
 	text=models.TextField(max_length=400)
 	created_date=models.DateField(_("Date"), default=datetime.date.today)
-	username=models.ForeignKey(auth_user)
+	user = models.ForeignKey(User)
 	post = models.ForeignKey(Post)
 
 class Likes(models.Model):
+	user = models.ForeignKey(User)
 	post = models.ForeignKey(Post)
 
 
 class Dislikes(models.Model):
 	post = models.ForeignKey(Post)
+	user = models.ForeignKey(User)
 
 
 class Reply(models.Model):
@@ -47,12 +50,12 @@ class Reply(models.Model):
 	comment=models.ForeignKey(Comment)
 
 
-class Tags(models.Model):
+class Tag(models.Model):
 	tag = models.CharField(max_length=200)
 	
 
-class Post_tags(models.Model):
-	tag = models.ForeignKey(Tags)
+class Post_tag(models.Model):
+	tag = models.ForeignKey(Tag)
 	post =models.ForeignKey(Post)
 
 
