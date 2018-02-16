@@ -73,7 +73,17 @@ def show_post(request, post_id):
     post = Post.objects.filter(id=post_id)
     return JsonResponse(serializers.serialize('json', post), safe=False)
 
+
+def show_comments(request, post_id):
+    post = Comment.objects.filter(post_id=post_id)
+    return JsonResponse(serializers.serialize('json', post), safe=False)
+
+
 def all_posts(request):
     all_post = Post.objects.all()
     return JsonResponse(serializers.serialize('json', all_post), safe=False)
 
+
+def get_user(request, user_id):
+    user = User.objects.filter(id=user_id)
+    return JsonResponse(serializers.serialize('json', user), safe=False)

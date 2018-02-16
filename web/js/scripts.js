@@ -28,7 +28,7 @@ $.ajax({
         });
 
     $(document).on('click', '.post-image', function(e) {
-   post_id=parseInt($(this).attr('post-no'));
+   post_id=$(this).attr('post-no');
     $.ajax({
             url: 'http://127.0.0.1:8000/posts/'+post_id+'/',
             type: 'get',
@@ -70,9 +70,8 @@ function cat_all() {
 
 
 function post(data) {
-    console.log("i am here ")
     return $('  <div class="card mt-4">\n' +
-        '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image" width="50" height="50" src="images/'+data.fields.picture+'" alt="">\n' +
+        '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image" width="50" height="50" src="./images/'+data.fields.picture+'" alt="">\n' +
         '            <div class="card-body">\n' +
         '              <h3 class="card-title">'+data.fields.title+'</h3>\n' +
         '              <p class="card-text">'+data.fields.content+'</p>\n' +
@@ -89,6 +88,59 @@ function setActiveMenuItem(item, activeItem) {
             $(this).removeClass("active");
         }
     });
+}
+function comments(data){
+    usernameSpan = $("<span></span>");
+    getUser(data.fields.user,printusername,usernameSpan);
+    ret =  $('            <div class="card-header">\n' +
+        '              Post Comments \n' +
+        '            </div>\n' +
+        '            <div class="card-body">\n' +
+        '              <p>'+data.fields.text+'</p>\n' +
+        '              <small class="text-muted">Posted by <span class="username"></span> on '+data.fields.created_date+'</small>\n' +
+        '              <hr>\n' +
+        '              <a href="#" class="btn btn-success">Leave a Comment</a>\n' +
+        '            </div>');
+    ret.find(".username").append(usernameSpan);
+    return ret;
+}
+
+function getComments(post_id){
+    $.ajax({
+            url: 'http://127.0.0.1:8000/comments/'+post_id+'/',
+            type: 'get',
+            success: function (response) {
+                data = JSON.parse(response);
+                console.log(data);
+                $(data).each(function(){
+                    pt=$('#comments');
+                    pt.append(comments(this));
+                });
+
+            }
+        });
+}
+
+function getUser(user_id,handle,element){
+
+        $.ajax({
+            url: 'http://127.0.0.1:8000/user/'+user_id+'/',
+            type: 'get',
+            success: function (response) {
+                data = JSON.parse(response)[0];
+                console.log(data);
+                handle(data,element);
+            }
+        });
+}
+
+
+function printusername(userObject,element) {
+     $(element).append(data.fields.username);
+}
+
+function printuserFristname(userObject) {
+     console.log(data.fields.first_name)
 }
 
 
