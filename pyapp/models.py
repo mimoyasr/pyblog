@@ -6,18 +6,6 @@ import datetime
 from django.contrib.auth.models import User
 
 
-# Create your models here.
-class Post(models.Model):
-    title = models.CharField(max_length=200)
-    picture = models.CharField(max_length=200)
-    content = models.TextField(max_length=200)
-    created_date = models.DateField(default=datetime.date.today)
-
-    # track = models.ForeignKey(Track)
-    def __str__(self):
-        return self.title
-
-
 class Category(models.Model):
     cat_name = models.CharField(max_length=200)
 
@@ -25,7 +13,19 @@ class Category(models.Model):
         return self.cat_name
 
 
-class Badwords(models.Model):
+class Post(models.Model):
+    title = models.CharField(max_length=200)
+    picture = models.CharField(max_length=200)
+    content = models.TextField(max_length=200)
+    created_date = models.DateField(default=datetime.date.today)
+    category = models.ForeignKey(Category)
+
+    # track = models.ForeignKey(Track)
+    def __str__(self):
+        return self.title
+
+
+class BadWords(models.Model):
     word = models.CharField(max_length=200)
 
     def __str__(self):

@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from pyapp.forms import SignUpForm
+from pyapp.models import *
 
 
 # Create your views here.
@@ -61,3 +62,8 @@ def signup(request):
 def all_categories(request):
     all_cat = Category.objects.all()
     return JsonResponse(serializers.serialize('json', all_cat), safe=False)
+
+
+def all_posts(request):
+    all_post = Post.objects.all()
+    return JsonResponse(serializers.serialize('json', all_post), safe=False)
