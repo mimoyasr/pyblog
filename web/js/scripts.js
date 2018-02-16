@@ -27,21 +27,19 @@ $.ajax({
             }
         });
 
-$('#post-image').on('click',function(e){
-    e.preventDefault();
-   post_id=parseInt($('#post-image').attr('post-no'));
+    $(document).on('click', '.post-image', function(e) {
+   post_id=parseInt($(this).attr('post-no'));
     $.ajax({
             url: 'http://127.0.0.1:8000/posts/'+post_id+'/',
             type: 'get',
             success: function (response) {
                 data = JSON.parse(response);
                 console.log(data);
-                post_body = $("#post-body");
+                post_body = $("#posts");
                 post_body.html("");
                 $(data).each(function(){
-                    console.log(this.fields);
-                    console.log(data);
-                    post_body.append(post(this.fields));
+                    console.log(this);
+                    post_body.append(post(this));
                 });
 
             }
@@ -72,7 +70,7 @@ function cat_all() {
 
 function post(data) {
     return $('  <div class="card mt-4">\n' +
-        '            <img class="card-img-top img-fluid" src="'+data.fields.picture+'" alt="">\n' +
+        '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image" width="50" height="50" src="./images/'+data.fields.picture+'" alt="">\n' +
         '            <div class="card-body">\n' +
         '              <h3 class="card-title">'+data.fields.title+'</h3>\n' +
         '              <p class="card-text">'+data.fields.content+'</p>\n' +
