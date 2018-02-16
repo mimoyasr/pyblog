@@ -61,6 +61,6 @@ class Tag(models.Model):
     tag = models.CharField(max_length=200)
 
 
-class Post_tag(models.Model):
+class PostTag(models.Model):
     tag = models.ForeignKey(Tag)
     post = models.ForeignKey(Post)
