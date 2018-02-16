@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.core import serializers
 from django.shortcuts import render
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from pyapp.forms import SignUpForm
 
-
 # Create your views here.
+from pyapp.models import Category, Post
+
 
 def login_form(request):
     if request.method == 'POST':
@@ -53,3 +55,19 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
+
+
+def all_categories(request):
+    all_cat = Category.objects.all()
+    return JsonResponse(serializers.serialize('json', all_cat), safe=False)
+
+
+def post_by_category(request, name):
+    cat = Category.objects.get(cat_name=name)
+    posts = Post.objects.filter(category=cat)
+    return JsonResponse(serializers.serialize('json', posts), safe=False)
+
+
+def show_post(request, post_id):
+    post = Post.objects.filter(id=post_id)
+    return JsonResponse(serializers.serialize('json', post), safe=False)

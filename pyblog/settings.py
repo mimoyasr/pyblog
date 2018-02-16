@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = (
     'pyapp',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +45,8 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -124,3 +127,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 LOGIN_URL = '/login_form'
+CORS_ORIGIN_ALLOW_ALL = True

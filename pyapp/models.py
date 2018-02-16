@@ -6,18 +6,6 @@ import datetime
 from django.contrib.auth.models import User
 
 
-# Create your models here.
-class Post(models.Model):
-    title = models.CharField(max_length=200)
-    picture = models.CharField(max_length=200)
-    content = models.TextField(max_length=200)
-    created_date = models.DateField(_("Date"), default=datetime.date.today)
-
-    # track = models.ForeignKey(Track)
-    def __str__(self):
-        return self.title
-
-
 class Category(models.Model):
     cat_name = models.CharField(max_length=200)
 
@@ -25,18 +13,31 @@ class Category(models.Model):
         return self.cat_name
 
 
+# Create your models here.
+class Post(models.Model):
+    title = models.CharField(max_length=200)
+    picture = models.CharField(max_length=200)
+    content = models.TextField(max_length=400)
+    category = models.ForeignKey(Category)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+
 class Badwords(models.Model):
     word = models.CharField(max_length=200)
-
     def __str__(self):
         return self.word
 
 
 class Comment(models.Model):
     text = models.TextField(max_length=400)
-    created_date = models.DateField(_("Date"), default=datetime.date.today)
+    created_date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User)
     post = models.ForeignKey(Post)
+    def __str__(self):
+        return self.text
 
 
 class Likes(models.Model):
@@ -51,10 +52,12 @@ class Dislikes(models.Model):
 
 class Reply(models.Model):
     text = models.TextField(max_length=400)
-    created_date = models.DateField(_("Date"), default=datetime.date.today)
-    username = models.ForeignKey(auth_user)
+    created_date = models.DateTimeField(auto_now_add=True)
+    username = models.ForeignKey(User)
     post = models.ForeignKey(Post)
     comment = models.ForeignKey(Comment)
+    def __str__(self):
+        return self.text
 
 
 class Tag(models.Model):
