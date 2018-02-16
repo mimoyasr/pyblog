@@ -73,7 +73,18 @@ def show_post(request, post_id):
     post = Post.objects.filter(id=post_id)
     return JsonResponse(serializers.serialize('json', post), safe=False)
 
+
 def all_posts(request):
     all_post = Post.objects.all()
     return JsonResponse(serializers.serialize('json', all_post), safe=False)
 
+
+def sup(request, user_id, cat_id):
+    new_sup = Sup.objects.create(user=user_id, cat=cat_id)
+    return JsonResponse(serializers.serialize('json', new_sup), safe=False)
+
+
+def un_sup(request, user_id, cat_id):
+    ret_sup = Sup.objects.get(user=user_id, cat=cat_id)
+    ret_sup.delete()
+    return JsonResponse(serializers.serialize('json', ret_sup), safe=False)

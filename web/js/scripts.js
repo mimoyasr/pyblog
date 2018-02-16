@@ -59,18 +59,16 @@ function br() {
 }
 
 function category(cat) {
-    console.log(cat);
     return $('<a href="http://127.0.0.1:8000/allCats/'+cat.fields.cat_name+'" class="cat_trigger list-group-item " val="'+cat.pk+'" >'+cat.fields.cat_name+'</a>')
 }
 
 
 function cat_all() {
-    return $('<a href="#" class="cat_trigger list-group-item active" val="0">All </a>');
+    return $('<a href="#" class="cat_trigger list-group-item active" val="0">All</a>');
 }
 
 
 function post(data) {
-    console.log("i am here ")
     return $('  <div class="card mt-4">\n' +
         '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image" width="50" height="50" src="images/'+data.fields.picture+'" alt="">\n' +
         '            <div class="card-body">\n' +

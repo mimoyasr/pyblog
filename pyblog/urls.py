@@ -16,9 +16,8 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
-#from pyapp import views
+# from pyapp import views
 from pyapp.views import *
-
 
 urlpatterns = [
     # url(r'^admin/', include(admin.site.urls)),
@@ -26,7 +25,9 @@ urlpatterns = [
     # url(r'^logged_in_only$',views.logged_in_only),
     # url(r'^signup/$', views.signup),
     url(r'^allCats/$', all_categories),
-    url(r'^allCats/(?P<name>[a-z]+)/$',post_by_category),
+    url(r'sup/(?P<user_id>[0-9]+)/(?P<cat_id>[0-9]+)/', sup),
+    url(r'unsup/(?P<user_id>[0-9]+)/(?P<cat_id>[0-9]+)/', un_sup),
+    url(r'^allCats/(?P<name>[a-z]+)/$', post_by_category),
     url(r'^allPosts$', all_posts),
-    url(r'^posts/(?P<post_id>[0-9]+)/$',show_post),
+    url(r'^posts/(?P<post_id>[0-9]+)/$', show_post),
 ]
