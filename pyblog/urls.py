@@ -24,5 +24,6 @@ urlpatterns = [
     # url(r'^logged_in_only$',views.logged_in_only),
     # url(r'^signup/$', views.signup),
     url(r'^allCats$', all_categories),
+    url(r'^allCats$', all_categories),
 ]
 

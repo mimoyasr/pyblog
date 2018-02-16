@@ -6,22 +6,34 @@ $.ajax({
                 console.log(data)
                 cats = $("#cats");
                 cats.html("");
+                cats.append(cat_all())
                 $(data).each(function(){
-                    cats.append(category(this.fields.cat_name));
-                    //cats.append(br())
+                    cats.append(category(this));
                 });
             }
         });
 
 
+$(document).on('click', '.cat_trigger', function() {
+       setActiveMenuItem('.cat_trigger',this);
+       console.log($(this).attr("val"))
+    });
+
 function br() {
     return $("<br>")
 }
 
-function category(name) {
+function category(cat) {
+    console.log(cat);
     // <a href="#" class="list-group-item active">Category 1</a>
-    return $('<a href="#" class="list-group-item active">'+name+'</a>')
+    return $('<a href="#" class="cat_trigger list-group-item " val="'+cat.pk+'" >'+cat.fields.cat_name+'</a>')
 }
+
+
+function cat_all() {
+    return $('<a href="#" class="cat_trigger list-group-item active" val="0">All </a>');
+}
+
 
 function post(data) {
     return $(' <div class="col-lg-9">\n' +
@@ -66,4 +78,15 @@ function post(data) {
         '            <!-- /.card -->\n' +
         '\n' +
         '        </div>')
+}
+
+function setActiveMenuItem(item, activeItem) {
+    $(item).each(function() {
+        if (this === activeItem) {
+            if (!$(this).hasClass("acctive"))
+                $(this).addClass("active");
+        } else {
+            $(this).removeClass("active");
+        }
+    });
 }
