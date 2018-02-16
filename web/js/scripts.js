@@ -3,15 +3,27 @@ $.ajax({
             type: 'get',
             success: function (response) {
                 data = JSON.parse(response);
-                console.log(data)
                 cats = $("#cats");
                 cats.html("");
+                cats.append(cat_all())
                 $(data).each(function(){
-                    console.log(this.fields.id);
-                    cats.append(category(this.fields.cat_name));
-                    //cats.append(br())
-
+                    cats.append(category(this));
                 });
+            }
+        });
+
+$.ajax({
+            url: 'http://127.0.0.1:8000/allPosts',
+            type: 'get',
+            success: function (response) {
+                data = JSON.parse(response);
+                console.log(data)
+                posts = $('#posts');
+                posts.html("");
+                $(data).each(function(){
+                    posts.append(post(this));
+                });
+
             }
         });
 
@@ -38,55 +50,43 @@ $('#post-image').on('click',function(e){
 
 });
 
+$(document).on('click', '.cat_trigger', function() {
+       setActiveMenuItem('.cat_trigger',this);
+       console.log($(this).attr("val"))
+    });
+
 function br() {
     return $("<br>")
 }
 
-function category(name) {
-    // <a href="#" class="list-group-item active">Category 1</a>
-    //id=>/allCats/?id=
-    return $('<a href="http://127.0.0.1:8000/allCats/'+name+'" class="list-group-item active">'+name+'</a>')
+function category(cat) {
+    console.log(cat);
+    return $('<a href="http://127.0.0.1:8000/allCats/'+cat.fields.cat_name+'" class="cat_trigger list-group-item " val="'+cat.pk+'" >'+cat.fields.cat_name+'</a>')
 }
 
+
+function cat_all() {
+    return $('<a href="#" class="cat_trigger list-group-item active" val="0">All </a>');
+}
+
+
 function post(data) {
-    return $(' <div class="col-lg-9">\n' +
-        '\n' +
-        '            <div class="card mt-4">\n' +
-        '                <img class="card-img-top img-fluid" src="http://placehold.it/900x400" alt="">\n' +
-        '                <div class="card-body">\n' +
-        '                    <h3 class="card-title">'+data.title+'</h3>\n' +
-        '                    <h4>$24.99</h4>\n' +
-        '                    <p class="card-text">'+data.content+'</p>\n' +
-        '                    <span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9734;</span>\n' +
-        '                    4.0 stars\n' +
-        '                </div>\n' +
+    return $('  <div class="card mt-4">\n' +
+        '            <img class="card-img-top img-fluid" src="'+data.fields.picture+'" alt="">\n' +
+        '            <div class="card-body">\n' +
+        '              <h3 class="card-title">'+data.fields.title+'</h3>\n' +
+        '              <p class="card-text">'+data.fields.content+'</p>\n' +
         '            </div>\n' +
-        '            <!-- /.card -->\n' +
-        '\n' +
-        '            <div class="card card-outline-secondary my-4">\n' +
-        '                <div class="card-header">\n' +
-        '                    Product Reviews\n' +
-        '                </div>\n' +
-        '                <div class="card-body">\n' +
-        '                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore,\n' +
-        '                        similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum.\n' +
-        '                        Sequi mollitia, necessitatibus quae sint natus.</p>\n' +
-        '                    <small class="text-muted">Posted by Anonymous on 3/1/17</small>\n' +
-        '                    <hr>\n' +
-        '                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore,\n' +
-        '                        similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum.\n' +
-        '                        Sequi mollitia, necessitatibus quae sint natus.</p>\n' +
-        '                    <small class="text-muted">Posted by Anonymous on 3/1/17</small>\n' +
-        '                    <hr>\n' +
-        '                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore,\n' +
-        '                        similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum.\n' +
-        '                        Sequi mollitia, necessitatibus quae sint natus.</p>\n' +
-        '                    <small class="text-muted">Posted by Anonymous on 3/1/17</small>\n' +
-        '                    <hr>\n' +
-        '                    <a href="#" class="btn btn-success">Leave a Review</a>\n' +
-        '                </div>\n' +
-        '            </div>\n' +
-        '            <!-- /.card -->\n' +
-        '\n' +
         '        </div>')
+}
+
+function setActiveMenuItem(item, activeItem) {
+    $(item).each(function() {
+        if (this === activeItem) {
+            if (!$(this).hasClass("acctive"))
+                $(this).addClass("active");
+        } else {
+            $(this).removeClass("active");
+        }
+    });
 }

@@ -13,7 +13,6 @@ class Category(models.Model):
         return self.cat_name
 
 
-# Create your models here.
 class Post(models.Model):
     title = models.CharField(max_length=200)
     picture = models.CharField(max_length=200)
@@ -21,11 +20,12 @@ class Post(models.Model):
     category = models.ForeignKey(Category)
     created_date = models.DateTimeField(auto_now_add=True)
 
+
     def __str__(self):
         return self.title
 
 
-class Badwords(models.Model):
+class BadWords(models.Model):
     word = models.CharField(max_length=200)
     def __str__(self):
         return self.word
