@@ -14,7 +14,10 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 from pyblog.db import DATABASES
 
+
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -27,11 +30,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+
 # Application definition
 
 INSTALLED_APPS = (
     'pyapp',
-    'pyblog_app',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -52,7 +55,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-
 )
 
 ROOT_URLCONF = 'pyblog.urls'
@@ -60,7 +62,7 @@ ROOT_URLCONF = 'pyblog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': os.path.join(BASE_DIR,'templates'),
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,17 +77,35 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pyblog.wsgi.application'
 
+
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-# DATABASES = {
 #    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': 'pyblog',
+#        #'USER': 'root',
+#        #'PASSWORD': '1234',
+#        'HOST': '127.0.0.1',
+#        'PORT': '3306',
 #    }
-# }
 
-# this section has been replaced by a separit file db.py
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+#this section has been replaced by a separit file db.py
 
 
 # Internationalization
@@ -101,8 +121,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+LOGIN_URL = '/login_form'
 CORS_ORIGIN_ALLOW_ALL = True

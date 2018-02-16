@@ -12,9 +12,8 @@ from django.shortcuts import render, redirect
 from pyapp.forms import SignUpForm
 from pyapp.models import *
 
-
 # Create your views here.
-from pyapp.models import Category
+from pyapp.models import Category, Post
 
 
 def login_form(request):
@@ -64,6 +63,17 @@ def all_categories(request):
     return JsonResponse(serializers.serialize('json', all_cat), safe=False)
 
 
+def post_by_category(request, name):
+    cat = Category.objects.get(cat_name=name)
+    posts = Post.objects.filter(category=cat)
+    return JsonResponse(serializers.serialize('json', posts), safe=False)
+
+
+def show_post(request, post_id):
+    post = Post.objects.filter(id=post_id)
+    return JsonResponse(serializers.serialize('json', post), safe=False)
+
 def all_posts(request):
     all_post = Post.objects.all()
     return JsonResponse(serializers.serialize('json', all_post), safe=False)
+
