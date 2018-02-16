@@ -35,12 +35,13 @@ $.ajax({
             success: function (response) {
                 data = JSON.parse(response);
                 console.log(data);
-                post_body = $("#posts");
-                post_body.html("");
+                modals = $('#modals_container');
+                modals.html("");
                 $(data).each(function(){
                     console.log(this);
-                    post_body.append(post(this));
+                    modals.append(postModal(this));
                 });
+                $('#postModal').modal('toggle');
 
             }
         });
@@ -69,8 +70,9 @@ function cat_all() {
 
 
 function post(data) {
+    console.log("i am here ")
     return $('  <div class="card mt-4">\n' +
-        '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image" width="50" height="50" src="./images/'+data.fields.picture+'" alt="">\n' +
+        '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image" width="50" height="50" src="images/'+data.fields.picture+'" alt="">\n' +
         '            <div class="card-body">\n' +
         '              <h3 class="card-title">'+data.fields.title+'</h3>\n' +
         '              <p class="card-text">'+data.fields.content+'</p>\n' +
@@ -87,4 +89,30 @@ function setActiveMenuItem(item, activeItem) {
             $(this).removeClass("active");
         }
     });
+}
+
+
+// $('#productModal').modal('toggle');
+
+
+
+
+function postModal(data) {
+    ret =  $('<div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="Cart" aria-hidden="true">\n' +
+        '    <div class="modal-dialog modal-lg" role="document">\n' +
+        '        <div class="modal-content">\n' +
+        '            <div class="modal-header">\n' +
+        '                <h5 class="modal-title" id="exampleModalLabel">'+data.fields.title+'</h5>\n' +
+        '                <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n' +
+        '                    <span aria-hidden="true">&times;</span>\n' +
+        '                </button>\n' +
+        '            </div>\n' +
+        '            <div class="modal-body" id="productContiner">\n' +
+        '\n' +
+        '            </div>\n' +
+        '        </div>\n' +
+        '    </div>\n' +
+        '</div>')
+        ret.find("#productContiner").append(post(data))
+        return ret;
 }
