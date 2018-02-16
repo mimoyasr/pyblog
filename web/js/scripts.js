@@ -34,12 +34,11 @@ $.ajax({
             type: 'get',
             success: function (response) {
                 data = JSON.parse(response);
-                console.log(data);
                 modals = $('#modals_container');
                 modals.html("");
                 $(data).each(function(){
-                    console.log(this);
                     modals.append(postModal(this));
+                    getComments(this.pk);
                 });
                 $('#postModal').modal('toggle');
 
@@ -75,6 +74,7 @@ function post(data) {
         '            <div class="card-body">\n' +
         '              <h3 class="card-title">'+data.fields.title+'</h3>\n' +
         '              <p class="card-text">'+data.fields.content+'</p>\n' +
+        '              <a href="#" class="btn btn-success">Leave a Comment</a>\n' +
         '            </div>\n' +
         '        </div>')
 }
@@ -92,14 +92,10 @@ function setActiveMenuItem(item, activeItem) {
 function comments(data){
     usernameSpan = $("<span></span>");
     getUser(data.fields.user,printusername,usernameSpan);
-    ret =  $('            <div class="card-header">\n' +
-        '              Post Comments \n' +
-        '            </div>\n' +
-        '            <div class="card-body">\n' +
+    ret =  $( '<div class="card-body">\n' +
         '              <p>'+data.fields.text+'</p>\n' +
         '              <small class="text-muted">Posted by <span class="username"></span> on '+data.fields.created_date+'</small>\n' +
         '              <hr>\n' +
-        '              <a href="#" class="btn btn-success">Leave a Comment</a>\n' +
         '            </div>');
     ret.find(".username").append(usernameSpan);
     return ret;
@@ -113,8 +109,7 @@ function getComments(post_id){
                 data = JSON.parse(response);
                 console.log(data);
                 $(data).each(function(){
-                    pt=$('#comments');
-                    pt.append(comments(this));
+                    $('#comments').append(comments(this));
                 });
 
             }
@@ -143,12 +138,6 @@ function printuserFristname(userObject) {
      console.log(data.fields.first_name)
 }
 
-
-// $('#productModal').modal('toggle');
-
-
-
-
 function postModal(data) {
     ret =  $('<div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="Cart" aria-hidden="true">\n' +
         '    <div class="modal-dialog modal-lg" role="document">\n' +
@@ -159,12 +148,15 @@ function postModal(data) {
         '                    <span aria-hidden="true">&times;</span>\n' +
         '                </button>\n' +
         '            </div>\n' +
-        '            <div class="modal-body" id="productContiner">\n' +
-        '\n' +
+        '            <div class="modal-body" id="postContiner">\n' +
         '            </div>\n' +
+        '            <div><div class="card-header">' +
+        '              Post Comments </div>'+
+        '               <div  id="comments"></div>'+
+        '             </div>'+
         '        </div>\n' +
         '    </div>\n' +
         '</div>')
-        ret.find("#productContiner").append(post(data))
+        ret.find("#postContiner").append(post(data));
         return ret;
 }
