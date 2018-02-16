@@ -28,18 +28,19 @@ $.ajax({
         });
 
     $(document).on('click', '.post-image', function(e) {
-   post_id=parseInt($(this).attr('post-no'));
+   post_id=$(this).attr('post-no');
     $.ajax({
             url: 'http://127.0.0.1:8000/posts/'+post_id+'/',
             type: 'get',
+            //data: {post_id: $(this).attr('post-no')},
             success: function (response) {
                 data = JSON.parse(response);
                 console.log(data);
                 post_body = $("#posts");
                 post_body.html("");
                 $(data).each(function(){
-                    console.log(this);
                     post_body.append(post(this));
+                    getComments(this.pk);
                 });
 
             }
@@ -88,3 +89,59 @@ function setActiveMenuItem(item, activeItem) {
         }
     });
 }
+function comments(data){
+    usernameSpan = $("<span></span>");
+    getUser(data.fields.user,printusername,usernameSpan);
+    ret =  $('            <div class="card-header">\n' +
+        '              Post Comments \n' +
+        '            </div>\n' +
+        '            <div class="card-body">\n' +
+        '              <p>'+data.fields.text+'</p>\n' +
+        '              <small class="text-muted">Posted by <span class="username"></span> on '+data.fields.created_date+'</small>\n' +
+        '              <hr>\n' +
+        '              <a href="#" class="btn btn-success">Leave a Comment</a>\n' +
+        '            </div>');
+    ret.find(".username").append(usernameSpan);
+    return ret;
+}
+
+function getComments(post_id){
+    $.ajax({
+            url: 'http://127.0.0.1:8000/comments/'+post_id+'/',
+            type: 'get',
+            success: function (response) {
+                data = JSON.parse(response);
+                console.log(data);
+                $(data).each(function(){
+                    pt=$('#comments');
+                    pt.append(comments(this));
+                });
+
+            }
+        });
+}
+
+function getUser(user_id,handle,element){
+
+        $.ajax({
+            url: 'http://127.0.0.1:8000/user/'+user_id+'/',
+            type: 'get',
+            success: function (response) {
+                data = JSON.parse(response)[0];
+                console.log(data);
+                handle(data,element);
+            }
+        });
+}
+
+
+function printusername(userObject,element) {
+     $(element).append(data.fields.username);
+}
+
+function printuserFristname(userObject) {
+     console.log(data.fields.first_name)
+}
+
+
+getUser(1,printusername);
