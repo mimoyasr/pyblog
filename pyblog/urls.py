@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^allCats/$', all_categories),
     url(r'^allCats/(?P<name>[a-z]+)/$',post_by_category),
     url(r'^allPosts$', all_posts),
+    url(r'^category/(?P<cat_id>[0-9]+)/$', get_category),
     url(r'^user/(?P<user_id>[0-9]+)/$',get_user),
     url(r'^posts/(?P<post_id>[0-9]+)/$',show_post),
     url(r'^comments/(?P<post_id>[0-9]+)/$',show_comments),
