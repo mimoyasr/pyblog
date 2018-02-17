@@ -1,4 +1,7 @@
-$.ajax({
+viewCatList();
+viewPosts();
+function viewCatList(){
+    $.ajax({
             url: 'http://127.0.0.1:8000/allCats',
             type: 'get',
             success: function (response) {
@@ -11,13 +14,14 @@ $.ajax({
                 });
             }
         });
+}
 
-$.ajax({
+function viewPosts(){
+    $.ajax({
             url: 'http://127.0.0.1:8000/allPosts',
             type: 'get',
             success: function (response) {
                 data = JSON.parse(response);
-                console.log(data)
                 posts = $('#posts');
                 posts.html("");
                 $(data).each(function(){
@@ -26,8 +30,9 @@ $.ajax({
 
             }
         });
+}
 
-    $(document).on('click', '.post-image', function(e) {
+    $(document).on('click', '.post-image', function() {
    post_id=$(this).attr('post-no');
     $.ajax({
             url: 'http://127.0.0.1:8000/posts/'+post_id+'/',
@@ -44,8 +49,27 @@ $.ajax({
 
             }
         });
+});
 
+$(document).on('click', '.category', function() {
+    cat_name=$(this).html();
+   if($(this).attr('val')==='0')
+       URL = 'http://127.0.0.1:8000/allPosts';
+   else
+       URL='http://127.0.0.1:8000/allCats/'+cat_name+'/';
+    $.ajax({
+            url:URL ,
+            type: 'get',
+            success: function (response) {
+                data = JSON.parse(response);
+                posts = $('#posts');
+                posts.html("");
+                $(data).each(function(){
+                    posts.append(post(this));
+                });
 
+            }
+        });
 });
 
 $(document).on('click', '.cat_trigger', function() {
@@ -56,27 +80,31 @@ $(document).on('click', '.cat_trigger', function() {
 function br() {
     return $("<br>")
 }
-
+//"http://127.0.0.1:8000/allCats/'+cat.fields.cat_name+
 function category(cat) {
-    console.log(cat);
-    return $('<a href="http://127.0.0.1:8000/allCats/'+cat.fields.cat_name+'" class="cat_trigger list-group-item " val="'+cat.pk+'" >'+cat.fields.cat_name+'</a>')
+    return $('<span class="cat_trigger list-group-item category" val="'+cat.pk+'" >'+cat.fields.cat_name+'</span>')
 }
 
 
 function cat_all() {
-    return $('<a href="#" class="cat_trigger list-group-item active" val="0">All </a>');
+    return $('<span class="cat_trigger list-group-item active category " val="0">All </span>');
 }
 
 
 function post(data) {
-    return $('  <div class="card mt-4">\n' +
-        '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image" width="50" height="50" src="./images/'+data.fields.picture+'" alt="">\n' +
+    categorySpan=$('<span></span>');
+    getCategory(data.fields.category,printCategoryname,categorySpan)
+    post_div=$('  <div class="card mt-4">\n' +
+        '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image" width="50px" height="50px" src="./images/'+data.fields.picture+'" alt="">\n' +
         '            <div class="card-body">\n' +
         '              <h3 class="card-title">'+data.fields.title+'</h3>\n' +
         '              <p class="card-text">'+data.fields.content+'</p>\n' +
+        '              <p class="card-text">Category: <span class="postCat"></span></p>\n' +
         '              <a href="#" class="btn btn-success">Leave a Comment</a>\n' +
         '            </div>\n' +
-        '        </div>')
+        '        </div>');
+    post_div.find('.postCat').append(categorySpan);
+    return post_div;
 }
 
 function setActiveMenuItem(item, activeItem) {
@@ -129,13 +157,25 @@ function getUser(user_id,handle,element){
         });
 }
 
+function getCategory(cat_id,handle,element){
+            $.ajax({
+            url: 'http://127.0.0.1:8000/category/'+cat_id+'/',
+            type: 'get',
+            success: function (response) {
+                data = JSON.parse(response)[0];
+                console.log(data);
+                handle(data,element);
+            }
+        });
+}
+
 
 function printusername(userObject,element) {
      $(element).append(data.fields.username);
 }
 
-function printuserFristname(userObject) {
-     console.log(data.fields.first_name)
+function printCategoryname(catObject,element) {
+      $(element).append(data.fields.cat_name)
 }
 
 function postModal(data) {
@@ -156,7 +196,7 @@ function postModal(data) {
         '             </div>'+
         '        </div>\n' +
         '    </div>\n' +
-        '</div>')
+        '</div>');
         ret.find("#postContiner").append(post(data));
         return ret;
 }

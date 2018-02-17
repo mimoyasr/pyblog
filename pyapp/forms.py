@@ -10,9 +10,10 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2',)
-
+"""""
 
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('text', 'created_date', 'post_id', 'user_id')
+"""""
