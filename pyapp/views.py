@@ -80,11 +80,11 @@ def all_posts(request):
 
 
 def sup(request, user_id, cat_id):
-    new_sup = Sup.objects.create(user=user_id, cat=cat_id)
-    return JsonResponse(serializers.serialize('json', new_sup), safe=False)
+    Sup.objects.create(user=User.objects.get(id=user_id), cat=Category.objects.get(id=cat_id))
+    return JsonResponse({"state": True}, safe=False)
 
 
 def un_sup(request, user_id, cat_id):
     ret_sup = Sup.objects.get(user=user_id, cat=cat_id)
     ret_sup.delete()
-    return JsonResponse(serializers.serialize('json', ret_sup), safe=False)
+    return JsonResponse({"state": "unsup"}, safe=False)
