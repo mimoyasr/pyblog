@@ -1,5 +1,5 @@
 $.ajax({
-            url: 'http://127.0.0.1:8000/allCats',
+            url: 'http://127.0.0.1:8000/allCats/',
             type: 'get',
             success: function (response) {
                 data = JSON.parse(response);
