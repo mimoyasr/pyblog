@@ -18,7 +18,6 @@ from pyapp.models import Category, Post
 
 def login_form(request):
     if request.method == 'POST':
-
         name = request.POST['username']
         password = request.POST['password']
 
