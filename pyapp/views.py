@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-from pyapp.forms import SignUpForm, CommentForm
+from pyapp.forms import SignUpForm
 from pyapp.models import *
 
 # Create your views here.
@@ -57,7 +57,7 @@ def signup(request):
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
 
-
+"""""
 def addComment(request):
     comment_form = CommentForm()
     if request.method == 'POST':
@@ -67,7 +67,7 @@ def addComment(request):
             return HttpResponseRedirect('/post/1/')
         context = {'form': comment_form}
         return render(request, 'posts/1', context)
-
+"""""
 
 def all_categories(request):
     all_cat = Category.objects.all()
@@ -98,3 +98,7 @@ def all_posts(request):
 def get_user(request, user_id):
     user = User.objects.filter(id=user_id)
     return JsonResponse(serializers.serialize('json', user), safe=False)
+
+def get_category(request,cat_id):
+    cat = Category.objects.filter(id=cat_id)
+    return JsonResponse(serializers.serialize('json', cat), safe=False)

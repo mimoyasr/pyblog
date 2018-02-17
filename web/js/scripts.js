@@ -69,14 +69,19 @@ function cat_all() {
 
 
 function post(data) {
-    return $('  <div class="card mt-4">\n' +
-        '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image" width="50" height="50" src="./images/'+data.fields.picture+'" alt="">\n' +
+    categorySpan=$('<span></span>');
+    getCategory(data.fields.category,printCategoryname,categorySpan)
+    post_div=$('  <div class="card mt-4">\n' +
+        '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image" width="50px" height="50px" src="./images/'+data.fields.picture+'" alt="">\n' +
         '            <div class="card-body">\n' +
         '              <h3 class="card-title">'+data.fields.title+'</h3>\n' +
         '              <p class="card-text">'+data.fields.content+'</p>\n' +
+        '              <p class="card-text">Category: <span class="postCat"></span></p>\n' +
         '              <a href="#" class="btn btn-success">Leave a Comment</a>\n' +
         '            </div>\n' +
-        '        </div>')
+        '        </div>');
+    post_div.find('.postCat').append(categorySpan);
+    return post_div;
 }
 
 function setActiveMenuItem(item, activeItem) {
@@ -129,13 +134,25 @@ function getUser(user_id,handle,element){
         });
 }
 
+function getCategory(cat_id,handle,element){
+            $.ajax({
+            url: 'http://127.0.0.1:8000/category/'+cat_id+'/',
+            type: 'get',
+            success: function (response) {
+                data = JSON.parse(response)[0];
+                console.log(data);
+                handle(data,element);
+            }
+        });
+}
+
 
 function printusername(userObject,element) {
      $(element).append(data.fields.username);
 }
 
-function printuserFristname(userObject) {
-     console.log(data.fields.first_name)
+function printCategoryname(catObject,element) {
+      $(element).append(data.fields.cat_name)
 }
 
 function postModal(data) {
@@ -156,7 +173,7 @@ function postModal(data) {
         '             </div>'+
         '        </div>\n' +
         '    </div>\n' +
-        '</div>')
+        '</div>');
         ret.find("#postContiner").append(post(data));
         return ret;
 }
