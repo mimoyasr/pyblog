@@ -4,12 +4,12 @@ from __future__ import unicode_literals
 from django.core import serializers
 from django.shortcuts import render
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-from pyapp.forms import SignUpForm
+from pyapp.forms import SignUpForm, CommentForm
 from pyapp.models import *
 
 # Create your views here.
@@ -56,6 +56,17 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
+
+
+def addComment(request):
+    comment_form = CommentForm()
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment_form.save()
+            return HttpResponseRedirect('/post/1/')
+        context = {'form': comment_form}
+        return render(request, 'posts/1', context)
 
 
 def all_categories(request):
