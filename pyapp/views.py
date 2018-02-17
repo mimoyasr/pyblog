@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.core import serializers
 from django.shortcuts import render
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
@@ -56,7 +56,18 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
+"""
 
+def addComment(request):
+    comment_form = CommentForm()
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment_form.save()
+            return HttpResponseRedirect('/post/1/')
+        context = {'form': comment_form}
+        return render(request, 'posts/1', context)
+"""
 
 def all_categories(request):
     all_cat = Category.objects.all()
@@ -74,10 +85,19 @@ def show_post(request, post_id):
     return JsonResponse(serializers.serialize('json', post), safe=False)
 
 
+def show_comments(request, post_id):
+    post = Comment.objects.filter(post_id=post_id)
+    return JsonResponse(serializers.serialize('json', post), safe=False)
+
+
 def all_posts(request):
     all_post = Post.objects.all()
     return JsonResponse(serializers.serialize('json', all_post), safe=False)
 
+
+def get_user(request, user_id):
+    user = User.objects.filter(id=user_id)
+    return JsonResponse(serializers.serialize('json', user), safe=False)
 
 def sup(request, user_id, cat_id):
     Sup.objects.create(user=User.objects.get(id=user_id), cat=Category.objects.get(id=cat_id))
