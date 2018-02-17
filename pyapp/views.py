@@ -66,7 +66,8 @@ def addComment(request):
             return HttpResponseRedirect('/post/1/')
         context = {'form': comment_form}
         return render(request, 'posts/1', context)
-"""""
+"""
+
 
 def all_categories(request):
     all_cat = Category.objects.all()
@@ -98,6 +99,18 @@ def get_user(request, user_id):
     user = User.objects.filter(id=user_id)
     return JsonResponse(serializers.serialize('json', user), safe=False)
 
+  
+def sup(request, user_id, cat_id):
+    Sup.objects.create(user=User.objects.get(id=user_id), cat=Category.objects.get(id=cat_id))
+    return JsonResponse({"state": True}, safe=False)
+
+  
+def un_sup(request, user_id, cat_id):
+    ret_sup = Sup.objects.get(user=user_id, cat=cat_id)
+    ret_sup.delete()
+    return JsonResponse({"state": "unsup"}, safe=False)
+  
+  
 def get_category(request,cat_id):
     cat = Category.objects.filter(id=cat_id)
     return JsonResponse(serializers.serialize('json', cat), safe=False)

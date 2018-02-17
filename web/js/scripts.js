@@ -1,3 +1,29 @@
+
+$.ajax({
+    url: 'http://127.0.0.1:8000/allCats/',
+    type: 'get',
+    success: function (response) {
+        data = JSON.parse(response);
+        cats = $("#cats");
+        cats.html("");
+        cats.append(cat_all())
+        $(data).each(function () {
+            cats.append(category(this));
+        });
+    }
+});
+
+$.ajax({
+    url: 'http://127.0.0.1:8000/allPosts',
+    type: 'get',
+    success: function (response) {
+        data = JSON.parse(response);
+        console.log(data)
+        posts = $('#posts');
+        posts.html("");
+        $(data).each(function () {
+            posts.append(post(this));
+
 viewCatList();
 viewPosts();
 function viewCatList(){
@@ -32,7 +58,11 @@ function viewPosts(){
         });
 }
 
-    $(document).on('click', '.post-image', function() {
+    }
+});
+
+    $(document).on('click', '.post-image', function(e) {
+
    post_id=$(this).attr('post-no');
     $.ajax({
             url: 'http://127.0.0.1:8000/posts/'+post_id+'/',
@@ -72,22 +102,59 @@ $(document).on('click', '.category', function() {
         });
 });
 
-$(document).on('click', '.cat_trigger', function() {
-       setActiveMenuItem('.cat_trigger',this);
-       console.log($(this).attr("val"))
+
+$(document).on('click', '.sup', function (e) {
+    self = this;
+    cat_id = $(this).attr('data');
+    //TODO dontforget to fix it #bug_1
+    user_id = 1;
+    $.ajax({
+        url: 'http://127.0.0.1:8000/sup/' + user_id + '/' + cat_id + '/',
+        type: 'get',
+        success: function (response) {
+            if (response)
+                toggle_btn(self)
+
+        }
     });
+});
+
+
+$(document).on('click', '.unsup', function (e) {
+    self = this;
+    cat_id = $(this).attr('data');
+    //TODO dontforget to fix it #bug_1
+    user_id = 1;
+    $.ajax({
+        url: 'http://127.0.0.1:8000/unsup/' + user_id + '/' + cat_id + '/',
+        type: 'get',
+        success: function (response) {
+            if (response)
+                toggle_btn(self)
+
+        }
+    });
+});
+
+$(document).on('click', '.cat_trigger', function () {
+    setActiveMenuItem('.cat_trigger', this);
+    console.log($(this).attr("val"))
+});
 
 function br() {
     return $("<br>")
 }
 //"http://127.0.0.1:8000/allCats/'+cat.fields.cat_name+
 function category(cat) {
-    return $('<span class="cat_trigger list-group-item category" val="'+cat.pk+'" >'+cat.fields.cat_name+'</span>')
+    return $('<div class="row">' +
+        '<a href="http://127.0.0.1:8000/allCats/' + cat.fields.cat_name + '" class="cat_trigger list-group-item col-5" val="' + cat.pk + '" >' + cat.fields.cat_name + '</a>' +
+        '<button class="col-5 offset-2 sup btn btn-outline-primary" data="' + cat.pk + '">Sup</button>' +
+        '</div>')
 }
 
 
 function cat_all() {
-    return $('<span class="cat_trigger list-group-item active category " val="0">All </span>');
+    return $('<a href="#" class="cat_trigger list-group-item active" val="0">All</a>');
 }
 
 
@@ -199,4 +266,17 @@ function postModal(data) {
         '</div>');
         ret.find("#postContiner").append(post(data));
         return ret;
+}
+
+
+function toggle_btn(btn) {
+    if ($(btn).html() == "Sup")
+        $(btn).html("Unsup")
+    else
+        $(btn).html("Sup")
+
+    $(btn).toggleClass("btn-outline-primary")
+    $(btn).toggleClass("btn-outline-danger")
+    $(btn).toggleClass("sup")
+    $(btn).toggleClass("unsup")
 }
