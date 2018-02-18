@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
+import json
 from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import render
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from django.contrib.sessions.models import Session
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from pyapp.forms import SignUpForm
@@ -57,7 +60,8 @@ def signup(request):
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
 
-"""""
+
+'''
 def addComment(request):
     comment_form = CommentForm()
     if request.method == 'POST':
@@ -67,7 +71,8 @@ def addComment(request):
             return HttpResponseRedirect('/post/1/')
         context = {'form': comment_form}
         return render(request, 'posts/1', context)
-"""""
+'''
+
 
 def all_categories(request):
     all_cat = Category.objects.all()
@@ -76,18 +81,37 @@ def all_categories(request):
 
 def post_by_category(request, name):
     cat = Category.objects.get(cat_name=name)
-    posts = Post.objects.filter(category=cat)
+    posts = Post.objects.filter(category=cat).order_by('-created_date')
     return JsonResponse(serializers.serialize('json', posts), safe=False)
 
 
 def show_post(request, post_id):
-    post = Post.objects.filter(id=post_id)
+    post = Post.objects.filter(id=post_id).order_by('-created_date')
     return JsonResponse(serializers.serialize('json', post), safe=False)
+
+def CharStars(text):
+    char_no=len(text)
+    stars=""
+    while char_no!=0 :
+        stars+='*'
+        char_no-=1
+    return stars
+
+def replaceBadWord(comment,bad_words):
+    for word in bad_words:
+        for ct in comment:
+            bad_word=str(word).lower()
+            my_comment=ct.text.lower()
+            stars=CharStars(bad_word)
+            ct.text=my_comment.replace(bad_word,str(stars))
+    return comment
 
 
 def show_comments(request, post_id):
-    post = Comment.objects.filter(post_id=post_id)
-    return JsonResponse(serializers.serialize('json', post), safe=False)
+    comment = Comment.objects.filter(post_id=post_id).order_by('-created_date')
+    bad_words = BadWords.objects.all()
+    comment=replaceBadWord(comment,bad_words)
+    return JsonResponse(serializers.serialize('json', comment), safe=False)
 
 
 def all_posts(request):
@@ -96,8 +120,9 @@ def all_posts(request):
 
 
 def get_user(request, user_id):
-    user = User.objects.filter(id=user_id)
-    return JsonResponse(serializers.serialize('json', user), safe=False)
+    user = User.objects.get(id=user_id)
+    return JsonResponse(serializers.serialize('json', [user]), safe=False)
+
 
 
 def sup(request, user_id, cat_id):
@@ -111,10 +136,19 @@ def un_sup(request, user_id, cat_id):
     return JsonResponse({"state": "unsup"}, safe=False)
 
 
-def get_category(request,cat_id):
-    cat = Category.objects.filter(id=cat_id)
-    return JsonResponse(serializers.serialize('json', cat), safe=False)
-
-
 def home(request):
    return render_to_response('home.html')
+
+def get_category(request, cat_id):
+    cat = Category.objects.get(id=cat_id)
+    return JsonResponse(serializers.serialize('json', [cat]), safe=False)
+
+
+def add_comment(request,text,post):
+    date=datetime.datetime.now()
+    #u=request.user
+    u=User.objects.get(id=1)
+    comment = Comment.objects.create(text=text,post=Post.objects.get(id=post),user=u,created_date=date)
+    bad_words = BadWords.objects.all()
+    comment = replaceBadWord([comment], bad_words)
+    return JsonResponse(serializers.serialize('json',comment), safe=False)
