@@ -1,0 +1,39 @@
+<html>
+
+<body>
+
+
+
+  <h1> All Users Info </h1>
+  <table border="1px">
+    <th>User Name</th>
+    <th>Email</th>
+    <th span="3" >Actions</th>
+{% for usr in allusers %}
+    <tr>
+        {% if usr.is_superuser == 1 %}
+            <td><font color="red">{{usr.username}}</font></td>
+             <td><font color="red">{{usr.email}}</font></td>
+        {% else %}
+            <td>{{usr.username}}</td>
+            <td>{{usr.email}}</td>
+            <td>
+            {% if usr.is_active == 1 %}
+                <a href="/block/{{usr.id}}"><button> Block </button></a>
+                <a href="/promote/{{usr.id}}"><button> Promote </button></a>
+
+            {% else %}
+                <a href="/unblock/{{usr.id}}"><button> Unblock </button></a>
+            </td>
+            {% endif %}
+        {% endif %}
+    </tr>
+    {% endfor %}
+
+  </table>
+
+</br>
+
+
+</body>
+</html>

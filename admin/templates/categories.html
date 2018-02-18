@@ -1,0 +1,31 @@
+<html>
+
+<body>
+
+
+
+  <h1> All Categories Info </h1>
+  <table border="1px">
+    <th>Category Name</th>
+    <th>Subscribers</th>
+    <th span="3" >Actions</th>
+{% for cat in allcategories %}
+    <tr>
+        <td>{{cat.cat_name}}</td>
+        <td>??</td>
+        <td>
+            <a href="{{cat.id}}/update"><button> Edit </button></a>
+            <a href="{{cat.id}}/delete"><button> Delete </button></a>
+        </td>
+    </tr>
+    {% endfor %}
+
+  </table>
+
+</br>
+
+
+<a href="new/">Add New Category</a>
+
+</body>
+</html>

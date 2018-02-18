@@ -1,0 +1,12 @@
+<html>
+<body>
+
+  <h1> New Bad Word</h1>
+  <form method="POST" >
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+  </form>
+
+</body>
+</html>
