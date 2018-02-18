@@ -26,7 +26,7 @@ urlpatterns = [
     # url(r'^logged_in_only$',views.logged_in_only),
     # url(r'^signup/$', views.signup),
     url(r'^allCats/$', all_categories),
-
+    url(r'^home/$', home),
     url(r'^unsup/(?P<user_id>[0-9]+)/(?P<cat_id>[0-9]+)/', un_sup),
     url(r'^sup/(?P<user_id>[0-9]+)/(?P<cat_id>[0-9]+)/', sup),
     url(r'^allCats/(?P<name>[a-z]+)/$', post_by_category),
