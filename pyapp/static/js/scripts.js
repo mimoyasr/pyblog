@@ -72,6 +72,44 @@ $(document).on('click', '.category', function() {
         });
 });
 
+
+$(document).on('click', '.sup', function (e) {
+    self = this;
+    cat_id = $(this).attr('data');
+    //TODO dontforget to fix it #bug_1
+    user_id = 1;
+    $.ajax({
+        url: 'http://127.0.0.1:8000/sup/' + user_id + '/' + cat_id + '/',
+        type: 'get',
+        success: function (response) {
+            if (response)
+                toggle_btn(self)
+
+        }
+    });
+});
+
+
+$(document).on('click', '.unsup', function (e) {
+    self = this;
+    cat_id = $(this).attr('data');
+    //TODO dontforget to fix it #bug_1
+    user_id = 1;
+    $.ajax({
+        url: 'http://127.0.0.1:8000/unsup/' + user_id + '/' + cat_id + '/',
+        type: 'get',
+        success: function (response) {
+            if (response)
+                toggle_btn(self)
+
+        }
+    });
+});
+
+$(document).on('click', '.cat_trigger', function () {
+    setActiveMenuItem('.cat_trigger', this);
+    console.log($(this).attr("val"))
+});
 $(document).on('click', '.cat_trigger', function() {
        setActiveMenuItem('.cat_trigger',this);
        console.log($(this).attr("val"))
@@ -228,6 +266,19 @@ function postModal(data) {
         '</div>');
         ret.find("#postContiner").append(post(data));
         return ret;
+}
+
+
+function toggle_btn(btn) {
+    if ($(btn).html() == "Sup")
+        $(btn).html("Unsup")
+    else
+        $(btn).html("Sup")
+
+    $(btn).toggleClass("btn-outline-primary")
+    $(btn).toggleClass("btn-outline-danger")
+    $(btn).toggleClass("sup")
+    $(btn).toggleClass("unsup")
 }
 function CommentModal() {
     ret =  $('<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="Cart" aria-hidden="true">\n' +

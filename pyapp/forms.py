@@ -16,4 +16,5 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('text', 'created_date', 'post_id', 'user_id')
-"""""
+"""
+
