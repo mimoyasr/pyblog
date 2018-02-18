@@ -1,3 +1,5 @@
+
+
 viewCatList();
 viewPosts();
 function viewCatList(){
@@ -95,7 +97,7 @@ function post(data) {
     categorySpan=$('<span></span>');
     getCategory(data.fields.category,printCategoryname,categorySpan)
     post_div=$('  <div class="card mt-4">\n' +
-        '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image" width="50px" height="50px" src="./images/'+data.fields.picture+'" alt="">\n' +
+        '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image" width="50px" height="50px" src="DJANGO_STATIC_URL/jj.jpg"  alt="">\n' +
         '            <div class="card-body">\n' +
         '              <h3 class="card-title">'+data.fields.title+'</h3>\n' +
         '              <p class="card-text">'+data.fields.content+'</p>\n' +

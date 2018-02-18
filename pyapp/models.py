@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 import datetime
 from django.contrib.auth.models import User
+#django.utils.timezone.now()
 
 
 class Category(models.Model):
@@ -34,7 +35,7 @@ class BadWords(models.Model):
 class Comment(models.Model):
     text = models.TextField(max_length=400)
     created_date = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User)
+    username = models.ForeignKey(User)
     post = models.ForeignKey(Post)
     def __str__(self):
         return self.text

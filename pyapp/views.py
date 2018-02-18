@@ -11,6 +11,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from pyapp.forms import SignUpForm
 from pyapp.models import *
+from django.shortcuts import render_to_response
 
 # Create your views here.
 from pyapp.models import Category, Post
@@ -101,3 +102,7 @@ def get_user(request, user_id):
 def get_category(request,cat_id):
     cat = Category.objects.filter(id=cat_id)
     return JsonResponse(serializers.serialize('json', cat), safe=False)
+
+
+def home(request):
+   return render_to_response('home.html')    
