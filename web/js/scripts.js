@@ -27,20 +27,20 @@ $.ajax({
     }
 });
 
-    $(document).on('click', '.post-image', function(e) {
-   post_id=$(this).attr('post-no');
+$(document).on('click', '.post-image', function (e) {
+    post_id = $(this).attr('post-no');
     $.ajax({
-            url: 'http://127.0.0.1:8000/posts/'+post_id+'/',
-            type: 'get',
-            success: function (response) {
-                data = JSON.parse(response);
-                modals = $('#modals_container');
-                modals.html("");
-                $(data).each(function(){
-                    modals.append(postModal(this));
-                    getComments(this.pk);
-                });
-                $('#postModal').modal('toggle');
+        url: 'http://127.0.0.1:8000/posts/' + post_id + '/',
+        type: 'get',
+        success: function (response) {
+            data = JSON.parse(response);
+            modals = $('#modals_container');
+            modals.html("");
+            $(data).each(function () {
+                modals.append(postModal(this));
+                getComments(this.pk);
+            });
+            $('#postModal').modal('toggle');
 
         }
     });
@@ -50,6 +50,7 @@ $.ajax({
 
 
 $(document).on('click', '.sup', function (e) {
+    e.preventDefault();
     self = this;
     cat_id = $(this).attr('data');
     //TODO dontforget to fix it #bug_1
@@ -67,6 +68,7 @@ $(document).on('click', '.sup', function (e) {
 
 
 $(document).on('click', '.unsup', function (e) {
+    e.preventDefault();
     self = this;
     cat_id = $(this).attr('data');
     //TODO dontforget to fix it #bug_1
@@ -84,18 +86,31 @@ $(document).on('click', '.unsup', function (e) {
 
 $(document).on('click', '.cat_trigger', function () {
     setActiveMenuItem('.cat_trigger', this);
-    console.log($(this).attr("val"))
 });
+
+
+function setActiveMenuItem(item, activeItem) {
+    console.log(activeItem);
+    $(item).each(function () {
+        if (this === activeItem) {
+            if (!$(this).hasClass("acctive"))
+                $(this).addClass("active");
+        } else {
+            $(this).removeClass("active");
+        }
+    });
+}
 
 function br() {
     return $("<br>")
 }
 
 function category(cat) {
-    return $('<div class="row">' +
-        '<a href="http://127.0.0.1:8000/allCats/' + cat.fields.cat_name + '" class="cat_trigger list-group-item col-5" val="' + cat.pk + '" >' + cat.fields.cat_name + '</a>' +
-        '<button class="col-5 offset-2 sup btn btn-outline-primary" data="' + cat.pk + '">Sup</button>' +
-        '</div>')
+    return $('<a href="#' + cat.fields.cat_name +
+        '" class="cat_trigger list-group-item" val="' + cat.pk + '"> ' +
+        '<span>' + cat.fields.cat_name + '</span>' +
+        '<button class="sup btn-sm btn-primary float-right" data="' + cat.pk + '">Sup</button>' +
+        '</a>')
 }
 
 
@@ -105,7 +120,6 @@ function cat_all() {
 
 
 function post(data) {
-    console.log("i am here ")
     return $('  <div class="card mt-4">\n' +
         '            <img  post-no="' + data.pk + '" class="card-img-top img-fluid post-image" width="50" height="50" src="./images/' + data.fields.picture + '" alt="">\n' +
         '            <div class="card-body">\n' +
@@ -116,71 +130,58 @@ function post(data) {
         '        </div>')
 }
 
-function setActiveMenuItem(item, activeItem) {
-    $(item).each(function() {
-        if (this === activeItem) {
-            if (!$(this).hasClass("acctive"))
-                $(this).addClass("active");
-        } else {
-            $(this).removeClass("active");
-        }
-    });
-}
-function comments(data){
+function comments(data) {
     usernameSpan = $("<span></span>");
-    getUser(data.fields.user,printusername,usernameSpan);
-    ret =  $( '<div class="card-body">\n' +
-        '              <p>'+data.fields.text+'</p>\n' +
-        '              <small class="text-muted">Posted by <span class="username"></span> on '+data.fields.created_date+'</small>\n' +
+    getUser(data.fields.user, printusername, usernameSpan);
+    ret = $('<div class="card-body">\n' +
+        '              <p>' + data.fields.text + '</p>\n' +
+        '              <small class="text-muted">Posted by <span class="username"></span> on ' + data.fields.created_date + '</small>\n' +
         '              <hr>\n' +
         '            </div>');
     ret.find(".username").append(usernameSpan);
     return ret;
 }
 
-function getComments(post_id){
+function getComments(post_id) {
     $.ajax({
-            url: 'http://127.0.0.1:8000/comments/'+post_id+'/',
-            type: 'get',
-            success: function (response) {
-                data = JSON.parse(response);
-                console.log(data);
-                $(data).each(function(){
-                    $('#comments').append(comments(this));
-                });
+        url: 'http://127.0.0.1:8000/comments/' + post_id + '/',
+        type: 'get',
+        success: function (response) {
+            data = JSON.parse(response);
+            console.log(data);
+            $(data).each(function () {
+                $('#comments').append(comments(this));
+            });
 
-            }
-        });
+        }
+    });
 }
 
-function getUser(user_id,handle,element){
+function getUser(user_id, handle, element) {
 
-        $.ajax({
-            url: 'http://127.0.0.1:8000/user/'+user_id+'/',
-            type: 'get',
-            success: function (response) {
-                data = JSON.parse(response)[0];
-                console.log(data);
-                handle(data,element);
-            }
-        });
+    $.ajax({
+        url: 'http://127.0.0.1:8000/user/' + user_id + '/',
+        type: 'get',
+        success: function (response) {
+            data = JSON.parse(response)[0];
+            console.log(data);
+            handle(data, element);
+        }
+    });
 }
 
 
-function printusername(userObject,element) {
-     $(element).append(data.fields.username);
+function printusername(userObject, element) {
+    $(element).append(data.fields.username);
 }
 
-function printuserFristname(userObject) {
-     console.log(data.fields.first_name)
-}
 
 function postModal(data) {
-    ret =  $('<div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="Cart" aria-hidden="true">\n' +
+    ret = $('<div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="Cart" aria-hidden="true">\n' +
         '    <div class="modal-dialog modal-lg" role="document">\n' +
         '        <div class="modal-content">\n' +
         '            <div class="modal-header">\n' +
-        '                <h5 class="modal-title" id="exampleModalLabel">'+data.fields.title+'</h5>\n' +
+        '                <h5 class="modal-title" id="exampleModalLabel">' + data.fields.title + '</h5>\n' +
         '                <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n' +
         '                    <span aria-hidden="true">&times;</span>\n' +
         '                </button>\n' +
@@ -188,14 +189,14 @@ function postModal(data) {
         '            <div class="modal-body" id="postContiner">\n' +
         '            </div>\n' +
         '            <div><div class="card-header">' +
-        '              Post Comments </div>'+
-        '               <div  id="comments"></div>'+
-        '             </div>'+
+        '              Post Comments </div>' +
+        '               <div  id="comments"></div>' +
+        '             </div>' +
         '        </div>\n' +
         '    </div>\n' +
         '</div>')
-        ret.find("#postContiner").append(post(data));
-        return ret;
+    ret.find("#postContiner").append(post(data));
+    return ret;
 }
 
 
@@ -204,9 +205,8 @@ function toggle_btn(btn) {
         $(btn).html("Unsup")
     else
         $(btn).html("Sup")
-
-    $(btn).toggleClass("btn-outline-primary")
-    $(btn).toggleClass("btn-outline-danger")
+    $(btn).toggleClass("btn-primary")
+    $(btn).toggleClass("btn-danger")
     $(btn).toggleClass("sup")
     $(btn).toggleClass("unsup")
 }
