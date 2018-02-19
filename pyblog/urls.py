@@ -38,4 +38,7 @@ urlpatterns = [
     url(r'^addcomment/(?P<text>[a-zA-Z0-9_ ]+)/(?P<post>[0-9]+)/$',add_comment),
     url(r'^allCats/(?P<name>[a-z]+)/$',post_by_category),
     url(r'^posts/(?P<post_id>[0-9]+)/$', show_post),
+    url(r'^reply/(?P<post_id>[0-9]+)/(?P<comment_id>[0-9]+)/$',show_reply),
+    url(r'^addreply/(?P<text>[a-zA-Z0-9_ ]+)/(?P<post_id>[0-9]+)/(?P<comment_id>[0-9]+)$',add_reply),
+
 ]
