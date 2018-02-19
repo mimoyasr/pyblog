@@ -46,9 +46,9 @@ function viewPosts(){
                     getComments(this.pk);
                 });
                 $('#postModal').modal('toggle');
-
             }
         });
+
 });
 
 $(document).on('click', '.category', function() {
@@ -133,7 +133,6 @@ $(document).on('click', '.commentForm', function(e) {
             //data: {text: $('.CommentText').val()},
             success: function (response) {
                  data = JSON.parse(response)[0];
-                 //getComments(postNo);
                 $('#comments').prepend(comments(data));
             }
     });
@@ -142,7 +141,7 @@ $(document).on('click', '.commentForm', function(e) {
 function br() {
     return $("<br>")
 }
-//"http://127.0.0.1:8000/allCats/'+cat.fields.cat_name+
+
 function category(cat) {
     return $('<span class="cat_trigger list-group-item category" val="'+cat.pk+'" >'+cat.fields.cat_name+'</span>')
 }
@@ -180,10 +179,19 @@ function setActiveMenuItem(item, activeItem) {
 }
 function comments(data){
     usernameSpan = $("<span></span>");
-    getUser(data.fields.user,printusername,usernameSpan);
+    getUser(data.fields.username,printusername,usernameSpan);
     ret =  $( '<div class="card-body">\n' +
         '              <p>'+data.fields.text+'</p>\n' +
-        '              <small class="text-muted">Posted by <span class="username"></span> on '+data.fields.created_date+'</small>\n' +
+        '              <small class="text-muted">Commented by <span class="username"></span> on '+data.fields.created_date+'</small>\n' +
+        '<div>' +
+        '<div comment-no="'+data.pk+'">'+Replys(data.fields.post,data.pk)+'</div>'+
+        '<div>' +
+        '<form method="get">'+
+        '<textarea class="ReplyText"></textarea><br/>' +
+        '<button class="btn btn-success replyForm">Leave a Reply</button> ' +
+        '</form>'+
+        '</div>'+
+        '</div>'+
         '              <hr>\n' +
         '            </div>');
     ret.find(".username").append(usernameSpan);
@@ -205,14 +213,13 @@ function getComments(post_id){
         });
 }
 
-function getUser(user_id,handle,element){
 
+function getUser(user_id,handle,element){
         $.ajax({
             url: 'http://127.0.0.1:8000/user/'+user_id+'/',
             type: 'get',
             success: function (response) {
                 data = JSON.parse(response)[0];
-                console.log(data);
                 handle(data,element);
             }
         });
@@ -254,7 +261,7 @@ function postModal(data) {
         '            <div><div class="card-header">' +
         '              Post Comments </div>'+
                 '            <div class="modal-body" id="FormContiner">\n' +
-        '<form id="commentForm" method="get">' +
+        '<form  method="get">' +
         '<textarea class="CommentText"></textarea><br/>' +
         '<button class="btn btn-success commentForm">Leave a Comment</button> ' +
         '</form>'+
@@ -274,30 +281,58 @@ function toggle_btn(btn) {
         $(btn).html("Unsup")
     else
         $(btn).html("Sup")
-
     $(btn).toggleClass("btn-outline-primary")
     $(btn).toggleClass("btn-outline-danger")
     $(btn).toggleClass("sup")
     $(btn).toggleClass("unsup")
 }
-function CommentModal() {
-    ret =  $('<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="Cart" aria-hidden="true">\n' +
-        '    <div class="modal-dialog modal-lg" role="document">\n' +
-        '        <div class="modal-content">\n' +
-        '            <div class="modal-header">\n' +
-        '                <h5 class="modal-title" id="exampleModalLabel">Add Comment</h5>\n' +
-        '                <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n' +
-        '                    <span aria-hidden="true">&times;</span>\n' +
-        '                </button>\n' +
-        '            </div>\n' +
-        '            <div class="modal-body" id="FormContiner">\n' +
-        '<form id="commentForm">' +
-        '<textarea name="text"></textarea>' +
-        '<button class="btn btn-success commentForm">Submit</button> ' +
-        '</form>'+
-        '            </div>\n' +
-        '        </div>\n' +
-        '    </div>\n' +
-        '</div>');
-        return ret;
+function Replys(post_id,comment_id){
+    $.ajax({
+            url: 'http://127.0.0.1:8000/reply/'+post_id+'/'+comment_id,
+            type: 'get',
+            success: function (response) {
+                    data = JSON.parse(response);
+                    replydiv=$('div[comment-no="'+comment_id+'"]');
+                    replydiv.html('');
+                    $(data).each(function () {
+                        replydiv.append(ReplyTemplate(this));
+
+                    });
+                }
+        });
 }
+function ReplyTemplate(data){
+    if (data ===undefined || data === null)
+    {
+        ret = $('<div class="modal-body" >\n' +
+            '             </div>');
+
+    }
+    else {
+            usernameSpan = $("<span></span>");
+            getUser(data.fields.username,printusername,usernameSpan);
+            ret = $('               <div  class="modal-body" id="reply">' + data.fields.text +
+            ' <br/><small class="text-muted">by <span class="username"></span> on ' + data.fields.created_date + '</small>' +
+            '             </div>');
+            ret.find(".username").append(usernameSpan);
+    }
+    return ret;
+
+}
+
+$(document).on('click', '.replyForm', function(e) {
+    e.preventDefault();
+    comment=$(this).parents()[2];
+    commentNo=$(comment).find('div:first-child').attr('comment-no');
+    text= $(comment).find('.ReplyText').val();
+    postNo=$('.post-image').attr('post-no');
+    $.ajax({
+            url: 'http://127.0.0.1:8000/addreply/'+text+'/'+postNo+'/'+commentNo,
+            type: 'get',
+            success: function (response) {
+                 data = JSON.parse(response)[0];
+                 replydiv=$('div[comment-no="'+commentNo+'"]');
+                 replydiv.prepend(ReplyTemplate(data));
+            }
+    });
+});

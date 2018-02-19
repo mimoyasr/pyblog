@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import json
+
+import datetime
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import render
@@ -59,19 +61,6 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
-
-
-'''
-def addComment(request):
-    comment_form = CommentForm()
-    if request.method == 'POST':
-        comment_form = CommentForm(request.POST)
-        if comment_form.is_valid():
-            comment_form.save()
-            return HttpResponseRedirect('/post/1/')
-        context = {'form': comment_form}
-        return render(request, 'posts/1', context)
-'''
 
 
 def all_categories(request):
@@ -148,7 +137,22 @@ def add_comment(request,text,post):
     date=datetime.datetime.now()
     #u=request.user
     u=User.objects.get(id=1)
-    comment = Comment.objects.create(text=text,post=Post.objects.get(id=post),user=u,created_date=date)
+    comment = Comment.objects.create(text=text,post=Post.objects.get(id=post),username=User.objects.get(id=1),created_date=date)
     bad_words = BadWords.objects.all()
     comment = replaceBadWord([comment], bad_words)
     return JsonResponse(serializers.serialize('json',comment), safe=False)
+
+def show_reply(request,post_id,comment_id):
+    bad_words = BadWords.objects.all()
+    reply=Reply.objects.filter(post=Post.objects.get(id=post_id),comment=Comment.objects.get(id=comment_id))
+    reply = replaceBadWord(reply, bad_words)
+    return JsonResponse(serializers.serialize('json', reply), safe=False)
+
+def add_reply(request,text,post_id,comment_id):
+    date=datetime.datetime.now()
+    #u=request.user
+    u=User.objects.get(id=1)
+    bad_words = BadWords.objects.all()
+    reply = Reply.objects.create(text=text,comment=Comment.objects.get(id=comment_id),post=Post.objects.get(id=post_id),username=u,created_date=date)
+    reply = replaceBadWord([reply], bad_words)
+    return JsonResponse(serializers.serialize('json',reply), safe=False)
