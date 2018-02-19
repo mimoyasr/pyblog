@@ -4,6 +4,7 @@
 {% load static %}
 
   <head>
+}
 <!-- +data.fields.picture+ -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -44,7 +45,20 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Contact</a>
-            </li>
+                          </li>
+    {% if user %}
+      <li class="nav-item">
+      <a class="nav-link" href="{% url 'logout' %}">logout</a>
+      </li>
+
+    {% endif %}
+    {% if admin %}
+      <li class="nav-item">
+      <a class="nav-link" href="{% url 'home' %}">admin page</a> 
+      </li>
+
+    {% endif %}    
+              
           </ul>
         </div>
       </div>
@@ -78,20 +92,21 @@
      <div id="modals_container">
 
      </div>
+
+     <div id="baseurl" class="invisible"></div>
       <script type="text/javascript">
-    DJANGO_STATIC_URL = '{{ STATIC_URL }}';
-    console.log(DJANGO_STATIC_URL);
      </script>
      <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
      <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-          <script src="{% static 'js/scripts.js' %}"></script>
+      <script src="{% static 'js/scripts.js' %}"></script>
 
 
     <!-- Bootstrap core JavaScript -->
     <!-- <script src="vendor/jquery/jquery.min.js"></script> -->
     <!-- <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script> -->
     <!-- <script src="js/scripts.js"></script> -->
-
   </body>
+
+
 
 </html>

@@ -15,9 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-
+from django.conf import settings
 #from pyapp import views
 from pyapp.views import *
+# from django.urls import path, include
+from django.views.generic.base import TemplateView
+from django.contrib.auth.views import logout
 
 
 urlpatterns = [
@@ -32,6 +35,15 @@ urlpatterns = [
     url(r'^user/(?P<user_id>[0-9]+)/$',get_user),
     url(r'^posts/(?P<post_id>[0-9]+)/$',show_post),
     url(r'^comments/(?P<post_id>[0-9]+)/$',show_comments),
+    url(r'^base/$', base_dir),
     url(r'^home/$', home),
+    url(r'^signup/$', signup),
+    url(r'^login/$', login_form),
+    # url(r'^logout/$', logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
+    # url(r'^logout/$','django.contrib.auth.views.logout',name='logout',kwargs={'next_page': '/'}),    url(r'^logout/$', auth_views.logout, name='logout'),
+    # url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'), 
+    # path('', TemplateView.as_view(template_name='home.html'), name='home'),
+    url(r'^logout/$', logout, {'next_page':settings.LOGOUT_REDIRECT_URL}, name='logout'),
+   
 
 ]

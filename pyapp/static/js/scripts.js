@@ -1,7 +1,12 @@
 
 
-viewCatList();
-viewPosts();
+
+
+$(document).ready(function(){
+    loadBaseURL();
+    viewCatList();
+    viewPosts();
+
 function viewCatList(){
     $.ajax({
             url: 'http://127.0.0.1:8000/allCats',
@@ -14,6 +19,20 @@ function viewCatList(){
                 $(data).each(function(){
                     cats.append(category(this));
                 });
+            }
+        });
+}
+
+function loadBaseURL(){
+
+        $.ajax({
+            url: 'http://127.0.0.1:8000/base/',
+            type: 'get',
+            success: function (response) {
+                
+                baseurl = response.base_dir;
+                $("#baseurl").html(baseurl);
+                
             }
         });
 }
@@ -94,10 +113,13 @@ function cat_all() {
 
 
 function post(data) {
+    console.log("post")
+    console.log(data)
     categorySpan=$('<span></span>');
     getCategory(data.fields.category,printCategoryname,categorySpan)
     post_div=$('  <div class="card mt-4">\n' +
-        '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image" width="50px" height="50px" src="DJANGO_STATIC_URL/jj.jpg"  alt="">\n' +
+        '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image"'+
+        '               width="50px" height="50px" src="'+base()+'/images/'+data.fields.picture+'"  alt="">\n' +
         '            <div class="card-body">\n' +
         '              <h3 class="card-title">'+data.fields.title+'</h3>\n' +
         '              <p class="card-text">'+data.fields.content+'</p>\n' +
@@ -159,6 +181,13 @@ function getUser(user_id,handle,element){
         });
 }
 
+function base(){
+    return $("#baseurl").html();
+}http://127.0.0.1:8000/home/
+
+
+
+
 function getCategory(cat_id,handle,element){
             $.ajax({
             url: 'http://127.0.0.1:8000/category/'+cat_id+'/',
@@ -202,3 +231,5 @@ function postModal(data) {
         ret.find("#postContiner").append(post(data));
         return ret;
 }
+ 
+});
