@@ -29,21 +29,22 @@ SECRET_KEY = 'v9-d=v4pm!88#0wecj0fhf5e+hck)(mam#g39p$%hx+t9mi_bh'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+LOGIN_REDIRECT_URL = 'main/index'
+LOGOUT_REDIRECT_URL = '/home'
 
 # Application definition
 
 INSTALLED_APPS = (
     'pyapp',
-    'corsheaders',
-    'django.contrib.admin',
+    'admin',
+    #'corsheaders',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 )
-
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBackend']
 MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -62,7 +63,7 @@ ROOT_URLCONF = 'pyblog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': os.path.join(BASE_DIR,'templates'),
+        'DIRS': os.path.join(BASE_DIR,'/admin/templates/'),
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -105,6 +106,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+
 #this section has been replaced by a separit file db.py
 
 
@@ -125,6 +133,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = os.path.join(BASE_DIR,'admin/static/')
 LOGIN_URL = '/login_form'
-CORS_ORIGIN_ALLOW_ALL = True
+MEDIA_URL='/pyapp/static/media/'
+MEDIA_ROOT=os.path.join(BASE_DIR, 'pyapp/static/media/')
+#CORS_ORIGIN_ALLOW_ALL = True

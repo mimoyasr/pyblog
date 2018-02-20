@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
+#django.utils.timezone.now()
 
 
 class Category(models.Model):
@@ -13,7 +14,7 @@ class Category(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
-    picture = models.CharField(max_length=200)
+    picture = models.ImageField(upload_to='', blank=True)
     content = models.TextField(max_length=400)
     category = models.ForeignKey(Category)
     created_date = models.DateTimeField(auto_now_add=True)
@@ -32,7 +33,7 @@ class BadWords(models.Model):
 class Comment(models.Model):
     text = models.TextField(max_length=400)
     created_date = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User)
+    username = models.ForeignKey(User)
     post = models.ForeignKey(Post)
 
     def __str__(self):
