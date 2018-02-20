@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login , logout
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from django.contrib.auth.forms import UserCreationForm
@@ -17,12 +17,16 @@ from django.shortcuts import render, redirect
 from pyapp.forms import SignUpForm
 from pyapp.models import *
 from django.shortcuts import render_to_response
+from pyblog.settings import BASE_DIR
+from django import forms
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 from pyapp.models import Category, Post
 
 
 def login_form(request):
+    # context = request
     if request.method == 'POST':
         name = request.POST['username']
         password = request.POST['password']
@@ -30,14 +34,34 @@ def login_form(request):
         # authenticate first search for the user in database and if found
         # it returns user object
         # and if it didn't find a user it will return None
-        user = authenticate(username=name, password=password)
+        user = authenticate(username=name, password=password )
 
-        if user is not None:  # this means we found the user in database
-            login(request, user)  # this means we put the user id in the session
+        if user:
+            if user.is_active==1:  # this means we found the user in database
+                login(request, user)  # this means we put the user id in the session
+                var=request.user
+                admin=request.user.is_superuser
+            # return HttpResponse(var.id)
+                # return HttpResponseRedirect('/home')
+                return render(request , "home.html",{'user':var,'admin':admin})
+            if user.is_active==0:
+                # return HttpResponse("you are blocked")  
+                return HttpResponse("You're account is disabled.")
+        else:
 
-            return HttpResponse('logged in succes')
 
-    return render(request, 'login_form.html')
+              # Return an 'invalid login' error message.
+            # messages.error(self.request, 'Username or Password invalid. Please try again')
+            # print  "invalid login details " + name + " " + password
+            # return render(request, 'login_form.html')
+            # print  "invalid login details " + name + " " + password
+            return HttpResponse("wrong username or password")
+    else:
+        # messages.error(self.request, 'Username or Password invalid. Please try again')
+
+        # the login is a  GET request, so just show the user the login form.
+        # return render_to_response('login_form.html', {}, context)              
+        return render(request, 'login_form.html',{})
 
 
 # this is a decorator
@@ -52,12 +76,13 @@ def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
+           
             form.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('home')
+            return HttpResponseRedirect('/home')
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
@@ -105,6 +130,8 @@ def show_comments(request, post_id):
 
 def all_posts(request):
     all_post = Post.objects.all()
+    for post in all_post:
+        post.dir = BASE_DIR
     return JsonResponse(serializers.serialize('json', all_post), safe=False)
 
 
@@ -126,7 +153,20 @@ def un_sup(request, user_id, cat_id):
 
 
 def home(request):
-   return render_to_response('home.html')
+    # return HttpResponse(request.user.id)
+    return render_to_response('home.html')    
+
+
+
+def base_dir(request):
+    return JsonResponse({"base_dir":BASE_DIR+"/pyapp/static/"}, safe=False)
+
+
+
+def logout(request):
+    logout(request)
+    #return HttpResponse("done")
+    return render_to_response('home.html')
 
 def get_category(request, cat_id):
     cat = Category.objects.get(id=cat_id)
