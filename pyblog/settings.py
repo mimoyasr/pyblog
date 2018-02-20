@@ -36,15 +36,15 @@ LOGOUT_REDIRECT_URL = '/home'
 
 INSTALLED_APPS = (
     'pyapp',
-    'corsheaders',
-    'django.contrib.admin',
+    'admin',
+    #'corsheaders',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 )
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBackend']
+
 MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -63,7 +63,7 @@ ROOT_URLCONF = 'pyblog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': os.path.join(BASE_DIR,'templates'),
+        'DIRS': os.path.join(BASE_DIR,'/admin/templates/'),
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,7 +132,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-
-STATIC_URL = os.path.join(BASE_DIR,'pyapp/static/')
+STATIC_URL = os.path.join(BASE_DIR,'admin/static/')
 LOGIN_URL = '/login_form'
-CORS_ORIGIN_ALLOW_ALL = True
+MEDIA_URL='/admin/static/media/'
+MEDIA_ROOT=os.path.join(BASE_DIR, 'admin/static/media/')
+#AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBackend']
+#CORS_ORIGIN_ALLOW_ALL = True
