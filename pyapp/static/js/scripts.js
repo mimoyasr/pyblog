@@ -31,7 +31,25 @@ function viewPosts(){
             }
         });
 }
+function getLikes(data){
+        $.ajax({
+            url: 'http://127.0.0.1:8000/likes/'+post_id+'/',
+            type: 'get',
+            success: function (response) {
+                data = JSON.parse(response);
+                modals = $('#modals_container');
+                modals.html("");
+                $(data).each(function(){
+                    modals.append(postModal(this));
+                    getComments(this.pk);
+                    getLikes(this.pk);
+                    getDislikes(this.pk);
+                });
+                $('#postModal').modal('toggle');
+            }
+        });
 
+}
     $(document).on('click', '.post-image', function() {
    post_id=$(this).attr('post-no');
     $.ajax({
@@ -44,6 +62,8 @@ function viewPosts(){
                 $(data).each(function(){
                     modals.append(postModal(this));
                     getComments(this.pk);
+                    getLikes(this.pk);
+                    getDislikes(this.pk);
                 });
                 $('#postModal').modal('toggle');
             }
@@ -154,9 +174,9 @@ function cat_all() {
 
 function post(data) {
     categorySpan=$('<span></span>');
-    getCategory(data.fields.category,printCategoryname,categorySpan)
+    getCategory(data.fields.category,printCategoryname,categorySpan)//data.fields.picture
     post_div=$('  <div class="card mt-4">\n' +
-        '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image" width="50px" height="50px" src="./images/'+data.fields.picture+'" alt="">\n' +
+        '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image" width="50px" height="50px" src=/images/'+data.fields.picture+' alt="">\n' +
         '            <div class="card-body">\n' +
         '              <h3 class="card-title">'+data.fields.title+'</h3>\n' +
         '              <p class="card-text">'+data.fields.content+'</p>\n' +
@@ -258,7 +278,12 @@ function postModal(data) {
         '            </div>\n' +
         '            <div class="modal-body" id="postContiner">\n' +
         '            </div>\n' +
-        '            <div><div class="card-header">' +
+        '            <div>' +
+        '<div class="card-body">' +
+        '<button class="btn-success" id="like">Like</button><input id="likeCounter" disabled width="4px"/>' +
+        '<button class="btn-danger" id="dislike">DisLike</button><input id="dislikeCounter" disabled/>' +
+        '</div>'+
+        '<div class="card-header">' +
         '              Post Comments </div>'+
                 '            <div class="modal-body" id="FormContiner">\n' +
         '<form  method="get">' +

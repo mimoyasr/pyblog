@@ -14,7 +14,7 @@ class Category(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
-    picture = models.CharField(max_length=200)
+    picture = models.FileField(max_length=200)
     content = models.TextField(max_length=400)
     category = models.ForeignKey(Category)
     created_date = models.DateTimeField(auto_now_add=True)
