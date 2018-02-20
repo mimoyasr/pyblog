@@ -29,7 +29,8 @@ SECRET_KEY = 'v9-d=v4pm!88#0wecj0fhf5e+hck)(mam#g39p$%hx+t9mi_bh'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+LOGIN_REDIRECT_URL = 'main/index'
+LOGOUT_REDIRECT_URL = '/home'
 
 # Application definition
 
@@ -43,7 +44,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 )
-
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBackend']
 MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',

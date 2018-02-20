@@ -1,33 +1,9 @@
-viewCatList();
-viewPosts();
 
-$.ajax({
-    url: 'http://127.0.0.1:8000/allCats/',
-    type: 'get',
-    success: function (response) {
-        data = JSON.parse(response);
-        cats = $("#cats");
-        cats.html("");
-        cats.append(cat_all())
-        $(data).each(function () {
-            cats.append(category(this));
-        });
-    }
-});
+$(document).ready(function(){
+    loadBaseURL();
+    viewCatList();
+    viewPosts();
 
-$.ajax({
-    url: 'http://127.0.0.1:8000/allPosts',
-    type: 'get',
-    success: function (response) {
-        data = JSON.parse(response);
-        console.log(data)
-        posts = $('#posts');
-        posts.html("");
-        $(data).each(function () {
-            posts.append(post(this));
-          });
-        }
-      });
 
 function viewCatList(){
     $.ajax({
@@ -41,6 +17,20 @@ function viewCatList(){
                 $(data).each(function(){
                     cats.append(category(this));
                 });
+            }
+        });
+}
+
+function loadBaseURL(){
+
+        $.ajax({
+            url: 'http://127.0.0.1:8000/base/',
+            type: 'get',
+            success: function (response) {
+                
+                baseurl = response.base_dir;
+                $("#baseurl").html(baseurl);
+                
             }
         });
 }
@@ -61,8 +51,8 @@ function viewPosts(){
         });
 }
 
-$(document).on('click', '.post-image', function(e) {
-      post_id=$(this).attr('post-no');
+    $(document).on('click', '.post-image', function() {
+   post_id=$(this).attr('post-no');
     $.ajax({
             url: 'http://127.0.0.1:8000/posts/'+post_id+'/',
             type: 'get',
@@ -75,9 +65,9 @@ $(document).on('click', '.post-image', function(e) {
                     getComments(this.pk);
                 });
                 $('#postModal').modal('toggle');
-
             }
         });
+
 });
 
 $(document).on('click', '.category', function() {
@@ -101,6 +91,7 @@ $(document).on('click', '.category', function() {
         });
 });
 
+
 $(document).on('click', '.sup', function (e) {
     self = this;
     cat_id = $(this).attr('data');
@@ -116,6 +107,7 @@ $(document).on('click', '.sup', function (e) {
         }
     });
 });
+
 
 $(document).on('click', '.unsup', function (e) {
     self = this;
@@ -137,32 +129,60 @@ $(document).on('click', '.cat_trigger', function () {
     setActiveMenuItem('.cat_trigger', this);
     console.log($(this).attr("val"))
 });
+$(document).on('click', '.cat_trigger', function() {
+       setActiveMenuItem('.cat_trigger',this);
+       console.log($(this).attr("val"))
+    });
+/*
+$(document).on('click', '.CommentButton', function() {
+      modals = $('#addComments_modal');
+      modals.html("");
+      modals.append(CommentModal());
+      $('#commentModal').modal('toggle');
+
+    });
+    */
+$(document).on('click', '.commentForm', function(e) {
+    e.preventDefault();
+    text= $('.CommentText').val();
+    postNo=$('.post-image').attr('post-no');
+    $.ajax({
+            url: 'http://127.0.0.1:8000/addcomment/'+text+'/'+postNo,
+            type: 'get',
+            //data: {text: $('.CommentText').val()},
+            success: function (response) {
+                 data = JSON.parse(response)[0];
+                $('#comments').prepend(comments(data));
+            }
+    });
+});
 
 function br() {
     return $("<br>")
 }
-//"http://127.0.0.1:8000/allCats/'+cat.fields.cat_name+
+
 function category(cat) {
-    return $('<div class="row">' +
-        '<a href="http://127.0.0.1:8000/allCats/' + cat.fields.cat_name + '" class="cat_trigger list-group-item col-5" val="' + cat.pk + '" >' + cat.fields.cat_name + '</a>' +
-        '<button class="col-5 offset-2 sup btn btn-outline-primary" data="' + cat.pk + '">Sup</button>' +
-        '</div>')
+    return $('<span class="cat_trigger list-group-item category" val="'+cat.pk+'" >'+cat.fields.cat_name+'</span>')
 }
+
 
 function cat_all() {
-    return $('<a href="#" class="cat_trigger list-group-item active" val="0">All</a>');
+    return $('<span class="cat_trigger list-group-item active category " val="0">All </span>');
 }
 
+
 function post(data) {
+    console.log("post")
+    console.log(data)
     categorySpan=$('<span></span>');
     getCategory(data.fields.category,printCategoryname,categorySpan)
     post_div=$('  <div class="card mt-4">\n' +
-        '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image" width="50px" height="50px" src="./images/'+data.fields.picture+'" alt="">\n' +
+        '            <img  post-no="'+data.pk+'" class="card-img-top img-fluid post-image"'+
+        '               width="50px" height="50px" src="'+base()+'/images/'+data.fields.picture+'"  alt="">\n' +
         '            <div class="card-body">\n' +
         '              <h3 class="card-title">'+data.fields.title+'</h3>\n' +
         '              <p class="card-text">'+data.fields.content+'</p>\n' +
         '              <p class="card-text">Category: <span class="postCat"></span></p>\n' +
-        '              <a href="#" class="btn btn-success">Leave a Comment</a>\n' +
         '            </div>\n' +
         '        </div>');
     post_div.find('.postCat').append(categorySpan);
@@ -179,13 +199,21 @@ function setActiveMenuItem(item, activeItem) {
         }
     });
 }
-
 function comments(data){
     usernameSpan = $("<span></span>");
-    getUser(data.fields.user,printusername,usernameSpan);
+    getUser(data.fields.username,printusername,usernameSpan);
     ret =  $( '<div class="card-body">\n' +
         '              <p>'+data.fields.text+'</p>\n' +
-        '              <small class="text-muted">Posted by <span class="username"></span> on '+data.fields.created_date+'</small>\n' +
+        '              <small class="text-muted">Commented by <span class="username"></span> on '+data.fields.created_date+'</small>\n' +
+        '<div>' +
+        '<div comment-no="'+data.pk+'">'+Replys(data.fields.post,data.pk)+'</div>'+
+        '<div>' +
+        '<form method="get">'+
+        '<textarea class="ReplyText"></textarea><br/>' +
+        '<button class="btn btn-success replyForm">Leave a Reply</button> ' +
+        '</form>'+
+        '</div>'+
+        '</div>'+
         '              <hr>\n' +
         '            </div>');
     ret.find(".username").append(usernameSpan);
@@ -198,7 +226,7 @@ function getComments(post_id){
             type: 'get',
             success: function (response) {
                 data = JSON.parse(response);
-                console.log(data);
+                $('#comments').html('');
                 $(data).each(function(){
                     $('#comments').append(comments(this));
                 });
@@ -207,18 +235,24 @@ function getComments(post_id){
         });
 }
 
-function getUser(user_id,handle,element){
 
+function getUser(user_id,handle,element){
         $.ajax({
             url: 'http://127.0.0.1:8000/user/'+user_id+'/',
             type: 'get',
             success: function (response) {
                 data = JSON.parse(response)[0];
-                console.log(data);
                 handle(data,element);
             }
         });
 }
+
+function base(){
+    return $("#baseurl").html();
+}http://127.0.0.1:8000/home/
+
+
+
 
 function getCategory(cat_id,handle,element){
             $.ajax({
@@ -231,6 +265,7 @@ function getCategory(cat_id,handle,element){
             }
         });
 }
+
 
 function printusername(userObject,element) {
      $(element).append(data.fields.username);
@@ -254,6 +289,12 @@ function postModal(data) {
         '            </div>\n' +
         '            <div><div class="card-header">' +
         '              Post Comments </div>'+
+                '            <div class="modal-body" id="FormContiner">\n' +
+        '<form  method="get">' +
+        '<textarea class="CommentText"></textarea><br/>' +
+        '<button class="btn btn-success commentForm">Leave a Comment</button> ' +
+        '</form>'+
+        '            </div>\n' +
         '               <div  id="comments"></div>'+
         '             </div>'+
         '        </div>\n' +
@@ -268,9 +309,58 @@ function toggle_btn(btn) {
         $(btn).html("Unsup")
     else
         $(btn).html("Sup")
-
     $(btn).toggleClass("btn-outline-primary")
     $(btn).toggleClass("btn-outline-danger")
     $(btn).toggleClass("sup")
     $(btn).toggleClass("unsup")
 }
+function Replys(post_id,comment_id){
+    $.ajax({
+            url: 'http://127.0.0.1:8000/reply/'+post_id+'/'+comment_id,
+            type: 'get',
+            success: function (response) {
+                    data = JSON.parse(response);
+                    replydiv=$('div[comment-no="'+comment_id+'"]');
+                    replydiv.html('');
+                    $(data).each(function () {
+                        replydiv.append(ReplyTemplate(this));
+
+                    });
+                }
+        });
+}
+function ReplyTemplate(data){
+    if (data ===undefined || data === null)
+    {
+        ret = $('<div class="modal-body" >\n' +
+            '             </div>');
+
+    }
+    else {
+            usernameSpan = $("<span></span>");
+            getUser(data.fields.username,printusername,usernameSpan);
+            ret = $('               <div  class="modal-body" id="reply">' + data.fields.text +
+            ' <br/><small class="text-muted">by <span class="username"></span> on ' + data.fields.created_date + '</small>' +
+            '             </div>');
+            ret.find(".username").append(usernameSpan);
+    }
+    return ret;
+
+}
+
+$(document).on('click', '.replyForm', function(e) {
+    e.preventDefault();
+    comment=$(this).parents()[2];
+    commentNo=$(comment).find('div:first-child').attr('comment-no');
+    text= $(comment).find('.ReplyText').val();
+    postNo=$('.post-image').attr('post-no');
+    $.ajax({
+            url: 'http://127.0.0.1:8000/addreply/'+text+'/'+postNo+'/'+commentNo,
+            type: 'get',
+            success: function (response) {
+                 data = JSON.parse(response)[0];
+                 replydiv=$('div[comment-no="'+commentNo+'"]');
+                 replydiv.prepend(ReplyTemplate(data));
+            }
+    });
+});

@@ -100,5 +100,5 @@ ENV/
 # mypy
 .mypy_cache/
 .idea/
-./pyblog/db.py
+pyblog/db.py
 pyapp/migrations/
