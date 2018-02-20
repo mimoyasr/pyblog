@@ -4,13 +4,14 @@ from __future__ import unicode_literals
 from django.core import serializers
 from django.shortcuts import render
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from pyapp.forms import SignUpForm
 from pyapp.models import *
+from django.shortcuts import render_to_response
 
 # Create your views here.
 from pyapp.models import Category, Post
@@ -18,7 +19,6 @@ from pyapp.models import Category, Post
 
 def login_form(request):
     if request.method == 'POST':
-
         name = request.POST['username']
         password = request.POST['password']
 
@@ -57,6 +57,17 @@ def signup(request):
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
 
+"""""
+def addComment(request):
+    comment_form = CommentForm()
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment_form.save()
+            return HttpResponseRedirect('/post/1/')
+        context = {'form': comment_form}
+        return render(request, 'posts/1', context)
+"""""
 
 def all_categories(request):
     all_cat = Category.objects.all()
@@ -87,3 +98,23 @@ def all_posts(request):
 def get_user(request, user_id):
     user = User.objects.filter(id=user_id)
     return JsonResponse(serializers.serialize('json', user), safe=False)
+
+
+def sup(request, user_id, cat_id):
+    Sup.objects.create(user=User.objects.get(id=user_id), cat=Category.objects.get(id=cat_id))
+    return JsonResponse({"state": True}, safe=False)
+
+
+def un_sup(request, user_id, cat_id):
+    ret_sup = Sup.objects.get(user=user_id, cat=cat_id)
+    ret_sup.delete()
+    return JsonResponse({"state": "unsup"}, safe=False)
+
+
+def get_category(request,cat_id):
+    cat = Category.objects.filter(id=cat_id)
+    return JsonResponse(serializers.serialize('json', cat), safe=False)
+
+
+def home(request):
+   return render_to_response('home.html')
