@@ -125,6 +125,9 @@
         </li>
         <li class="breadcrumb-item active">Tables</li>
       </ol>
+
+      <a href="/post/new"> <button type="button" class="btn btn-primary" >create new post</button></a>
+        <br><br>
       <!-- Example DataTables Card-->
       <div class="card mb-3">
         <div class="card-header">
@@ -143,7 +146,7 @@
                      <td style="width:50%; height:20%;">
                           <p>
                          {% if post.picture%}
-                    <img  src='{{post.picture.url }}' width="300px" height="300px"/>
+                    <img  src="{{post.picture.url }}" width="300px" height="300px"/>
                   {% endif %}
               </p>
 
@@ -153,9 +156,9 @@
              <p>
 		    {{ post.content }}
                 </p>
-			<a href = "post/{{post.id}}/edit">Edit</a>
+                         <a href = "/post/{{post.id}}/edit"><button type="button" class="btn btn-secondary">Edit</button></a>
                   &nbsp;&nbsp;&nbsp;
-			<a href = "post/{{post.id}}/del">Delete</a>
+                         <a href = "/post/{{post.id}}/del"><button type="button" class="btn btn-danger">Delete</button></a>
                      </td>
                     </div>
                 {%  endfor  %}
@@ -166,7 +169,6 @@
         </div>
         <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
       </div>
-        <a href="new/"> <button type="button" class="btn btn-primary" >create new post</button></a>
 
 
     </div>

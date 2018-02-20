@@ -19,7 +19,8 @@ from django.contrib import admin
 #from pyapp import views
 from pyapp.views import *
 from admin.views import *
-
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     # url(r'^admin/', include(admin.site.urls)),
     # url(r'^login_form$',views.login_form),
@@ -40,6 +41,8 @@ urlpatterns = [
     url(r'^unblock/(?P<usr_id>[0-9]+)$',user_unblock),
     url(r'^promote/(?P<usr_id>[0-9]+)$',user_promote),
     url(r'^(?P<usr_id>[0-9]+)/delete', user_delete),
+    url(r'^(?P<usr_id>[0-9]+)/update', user_update),
+    url(r'^user/new', user_new),
     url(r'^allcategories/$', allCategories),
     url(r'^allcategories/new/$',category_new),
     url(r'^allcategories/(?P<cat_id>[0-9]+)/update',category_update),
@@ -49,9 +52,10 @@ urlpatterns = [
     url(r'^allbadwords/(?P<word_id>[0-9]+)/update',badword_update),
     url(r'^allbadwords/(?P<word_id>[0-9]+)/delete', badword_delete),
     url(r'^allposts/',allPosts),
-    url(r'^allposts/new/$',post_new),
+    url(r'^post/new',post_new),
     url(r'^post/(?P<post_id>[0-9]+)/edit',Posts_edit),
     url(r'^post/(?P<post_id>[0-9]+)/del',Post_delete),
     url(r'^index',admin),
-
 ]
+if settings.DEBUG:
+    urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

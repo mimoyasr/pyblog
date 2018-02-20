@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from pyapp.models import Category,BadWords,Post
 from .forms import *
+from pyapp.forms import SignUpForm
 
 def allUsers(request):
   all_users=User.objects.all()
@@ -33,7 +34,26 @@ def user_delete(request,usr_id):
 
     return HttpResponseRedirect("/allusers")
 
+def user_update(request,usr_id):
+    usr=User.objects.get(id=usr_id)
+    form = SignUpForm( instance=usr)
+    if request.method == "POST":
+        form= SignUpForm(request.POST,instance=usr)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect("/allusers")
+    context={"form":form}
+    return render(request,"signup.html",context)
 
+def user_new(request):
+    form = SignUpForm()
+    if request.method == "POST":
+        form= SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect("/allusers")
+    context={"form":form}
+    return render(request,"signup.html",context)
 
 def allCategories(request):
   all_categories=Category.objects.all()
@@ -111,12 +131,11 @@ def allPosts(request):
 def post_new(request):
     form = PostForm()
     if request.method == "POST":
-        form = PostForm(request.POST or None,request.FILES or None)
+        form = PostForm(request.POST,request.FILES)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('allposts/')
-    context={'form':form}
-    return render(request,'post.html',context)
+            return HttpResponseRedirect('/allposts')
+    return render(request,'post.html',{'form':form})
 
 def Posts_edit(request, post_id):
     post = Post.objects.get(id=post_id)

@@ -12,10 +12,8 @@ class BadWordsForm(forms.ModelForm):
         model = BadWords
         fields = ('word',)
 
-
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title', 'picture', 'content','category')
-
+        fields = ('title', 'picture', 'content' ,'category')
 

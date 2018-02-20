@@ -1,3 +1,5 @@
+viewCatList();
+viewPosts();
 
 $.ajax({
     url: 'http://127.0.0.1:8000/allCats/',
@@ -23,9 +25,10 @@ $.ajax({
         posts.html("");
         $(data).each(function () {
             posts.append(post(this));
+          });
+        }
+      });
 
-viewCatList();
-viewPosts();
 function viewCatList(){
     $.ajax({
             url: 'http://127.0.0.1:8000/allCats',
@@ -58,12 +61,8 @@ function viewPosts(){
         });
 }
 
-    }
-});
-
-    $(document).on('click', '.post-image', function(e) {
-
-   post_id=$(this).attr('post-no');
+$(document).on('click', '.post-image', function(e) {
+      post_id=$(this).attr('post-no');
     $.ajax({
             url: 'http://127.0.0.1:8000/posts/'+post_id+'/',
             type: 'get',
@@ -102,7 +101,6 @@ $(document).on('click', '.category', function() {
         });
 });
 
-
 $(document).on('click', '.sup', function (e) {
     self = this;
     cat_id = $(this).attr('data');
@@ -118,7 +116,6 @@ $(document).on('click', '.sup', function (e) {
         }
     });
 });
-
 
 $(document).on('click', '.unsup', function (e) {
     self = this;
@@ -152,11 +149,9 @@ function category(cat) {
         '</div>')
 }
 
-
 function cat_all() {
     return $('<a href="#" class="cat_trigger list-group-item active" val="0">All</a>');
 }
-
 
 function post(data) {
     categorySpan=$('<span></span>');
@@ -184,6 +179,7 @@ function setActiveMenuItem(item, activeItem) {
         }
     });
 }
+
 function comments(data){
     usernameSpan = $("<span></span>");
     getUser(data.fields.user,printusername,usernameSpan);
@@ -236,7 +232,6 @@ function getCategory(cat_id,handle,element){
         });
 }
 
-
 function printusername(userObject,element) {
      $(element).append(data.fields.username);
 }
@@ -267,7 +262,6 @@ function postModal(data) {
         ret.find("#postContiner").append(post(data));
         return ret;
 }
-
 
 function toggle_btn(btn) {
     if ($(btn).html() == "Sup")

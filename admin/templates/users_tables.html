@@ -118,7 +118,9 @@
         <li class="breadcrumb-item active">Tables</li>
       </ol>
 
+      <a href="/user/new/"> <button type="button" class="btn btn-primary" >Add New User</button></a>
 
+      <br><br>
 
       <div class="card mb-3">
         <div class="card-header">
@@ -159,7 +161,10 @@
                         <td>{{usr.date_joined}}</td>
                         <td>{{usr.last_login}}</td>
                         <td>
-                        {% if usr.is_active == 1 %}
+                          <a href="/{{usr.id}}/delete"><button type="button" class="btn btn-danger"> Delete </button></a>
+                          <a href="/{{usr.id}}/update"><button type="button" class="btn btn-secondary"> Edit </button></a>
+
+                          {% if usr.is_active == 1 %}
                             <a href="/block/{{usr.id}}"><button type="button" class="btn btn-danger"> Block </button></a>
                             <a href="/promote/{{usr.id}}"><button type="button" class="btn btn-success"> Promote </button></a>
 

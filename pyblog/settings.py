@@ -34,8 +34,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
-    'admin',
     'pyapp',
+    'admin',
     #'corsheaders',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -62,7 +62,7 @@ ROOT_URLCONF = 'pyblog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': os.path.join(BASE_DIR,'/admin/templates'),
+        'DIRS': os.path.join(BASE_DIR,'/admin/templates/'),
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -134,4 +134,6 @@ USE_TZ = True
 
 STATIC_URL = os.path.join(BASE_DIR,'admin/static/')
 LOGIN_URL = '/login_form'
-CORS_ORIGIN_ALLOW_ALL = True
+MEDIA_URL='/pyapp/static/media/'
+MEDIA_ROOT=os.path.join(BASE_DIR, 'pyapp/static/media/')
+#CORS_ORIGIN_ALLOW_ALL = True
