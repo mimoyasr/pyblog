@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^allCats/(?P<name>[a-z]+)/$', post_by_category),
     url(r'^allPosts$', all_posts),
     url(r'^category/(?P<cat_id>[0-9]+)/$', get_category),
+    url(r'^base/$',base_dir),
     url(r'^user/(?P<user_id>[0-9]+)/$',get_user),
     url(r'^posts/(?P<post_id>[0-9]+)/$',show_post),
     url(r'^comments/(?P<post_id>[0-9]+)/$',show_comments),
@@ -40,5 +41,10 @@ urlpatterns = [
     url(r'^posts/(?P<post_id>[0-9]+)/$', show_post),
     url(r'^reply/(?P<post_id>[0-9]+)/(?P<comment_id>[0-9]+)/$',show_reply),
     url(r'^addreply/(?P<text>[a-zA-Z0-9_ ]+)/(?P<post_id>[0-9]+)/(?P<comment_id>[0-9]+)$',add_reply),
+    url(r'^likes/(?P<post_id>[0-9]+)/$', show_likes),
+    url(r'^dislikes/(?P<post_id>[0-9]+)/$', show_dislikes),
+    url(r'^addlike/(?P<post_id>[0-9]+)/$', add_like),
+    url(r'^adddislike/(?P<post_id>[0-9]+)/$', add_dislike),
+
 
 ]
