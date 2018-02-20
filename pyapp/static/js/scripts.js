@@ -3,7 +3,12 @@ $(document).ready(function () {
     viewCatList();
     viewPosts();
 
-
+function getUserState(){
+    //if($('#state').attr('value')==1)
+    return true;
+    /*else
+        return false;*/
+}
     function loadBaseURL() {
 
         $.ajax({
@@ -106,6 +111,14 @@ $(document).ready(function () {
 
     $(document).on('click', '.post-image', function () {
         post_id = $(this).attr('post-no');
+        if(getUserState()===true ) {
+        $('#formReplyContainer').append(ReplyForm());
+        $('#formCommentContainer').append(CommentForm());
+            }
+            else{
+        $('.like').attr('diabled');
+        $('.dislike').attr('diabled');
+    }
         $.ajax({
             url: 'http://127.0.0.1:8000/posts/' + post_id + '/',
             type: 'get',
@@ -256,10 +269,7 @@ $(document).ready(function () {
             '<div>' +
             '<div comment-no="' + data.pk + '">' + Replys(data.fields.post, data.pk) + '</div>' +
             '<div>' +
-            '<form method="get">' +
-            '<textarea class="ReplyText"></textarea><br/>' +
-            '<button class="btn btn-success replyForm">Leave a Reply</button> ' +
-            '</form>' +
+            '<div class="card-body" id="formReplyContainer"></div>'+
             '</div>' +
             '</div>' +
             '              <hr>\n' +
@@ -267,6 +277,19 @@ $(document).ready(function () {
         ret.find(".username").append(usernameSpan);
         return ret;
     }
+    function ReplyForm(){
+        return $('<form method="get">' +
+            '<textarea class="ReplyText"></textarea><br/>' +
+            '<button class="btn btn-success replyForm">Leave a Reply</button> ' +
+            '</form>');
+    }
+    function CommentForm(){
+        return $('<form  method="get">' +
+            '<textarea class="CommentText"></textarea><br/>' +
+            '<button class="btn btn-success commentForm">Leave a Comment</button> ' +
+            '</form>');
+    }
+
 
     function getComments(post_id) {
         $.ajax({
@@ -335,11 +358,7 @@ $(document).ready(function () {
             '            <div>' +
             '<div class="card-header">' +
             '              Post Comments </div>' +
-            '            <div class="modal-body" id="FormContiner">\n' +
-            '<form  method="get">' +
-            '<textarea class="CommentText"></textarea><br/>' +
-            '<button class="btn btn-success commentForm">Leave a Comment</button> ' +
-            '</form>' +
+            '            <div class="modal-body" id="formCommentContainer">\n' +
             '            </div>\n' +
             '               <div  id="comments"></div>' +
             '             </div>' +
