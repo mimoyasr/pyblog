@@ -44,7 +44,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 )
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBackend']
+
 MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -132,9 +132,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-
 STATIC_URL = os.path.join(BASE_DIR,'admin/static/')
 LOGIN_URL = '/login_form'
-MEDIA_URL='/pyapp/static/media/'
-MEDIA_ROOT=os.path.join(BASE_DIR, 'pyapp/static/media/')
+MEDIA_URL='/admin/static/media/'
+MEDIA_ROOT=os.path.join(BASE_DIR, 'admin/static/media/')
+#AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBackend']
 #CORS_ORIGIN_ALLOW_ALL = True

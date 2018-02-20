@@ -109,6 +109,10 @@
             <div class="dropdown-divider"></div>
           </div>
         </li>
+          <li class="nav-item">
+          <a class="nav-link" href="/home">
+            Home</a>
+        </li>
 
         <li class="nav-item">
           <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
@@ -134,9 +138,9 @@
               <div class="card-body-icon">
                 <i class="fa fa-fw fa-comments"></i>
               </div>
-              <div class="mr-5"> Users!</div>
+              <div class="mr-5"> {{ postcount }} Posts</div>
             </div>
-            <a class="card-footer text-white clearfix small z-1" href="/allusers">
+            <a class="card-footer text-white clearfix small z-1" href="/allposts">
               <span class="float-left">View Details</span>
               <span class="float-right">
                 <i class="fa fa-angle-right"></i>
@@ -150,9 +154,9 @@
               <div class="card-body-icon">
                 <i class="fa fa-fw fa-list"></i>
               </div>
-              <div class="mr-5">Posts!</div>
+              <div class="mr-5"> {{ usercount }} Users</div>
             </div>
-            <a class="card-footer text-white clearfix small z-1" href="allposts/">
+            <a class="card-footer text-white clearfix small z-1" href="allusers/">
               <span class="float-left">View Details</span>
               <span class="float-right">
                 <i class="fa fa-angle-right"></i>
@@ -166,7 +170,7 @@
               <div class="card-body-icon">
                 <i class="fa fa-fw fa-shopping-cart"></i>
               </div>
-              <div class="mr-5">Categories!</div>
+              <div class="mr-5"> {{ catcount }} Categories</div>
             </div>
             <a class="card-footer text-white clearfix small z-1" href="/allcategories">
               <span class="float-left">View Details</span>
@@ -182,7 +186,7 @@
               <div class="card-body-icon">
                 <i class="fa fa-fw fa-support"></i>
               </div>
-              <div class="mr-5">Forbidden Words!</div>
+              <div class="mr-5">{{ wordcount }} Forbidden Words!</div>
             </div>
             <a class="card-footer text-white clearfix small z-1" href="/allbadwords">
               <span class="float-left">View Details</span>
@@ -223,7 +227,7 @@
           <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="login.html">Logout</a>
+            <a class="btn btn-primary" href="/logout">Logout</a>
           </div>
         </div>
       </div>
