@@ -73,5 +73,5 @@ class Reply(models.Model):
 
 
 class Sup(models.Model):
-    user = models.ForeignKey(User)
-    cat = models.ForeignKey(Category)
+    sub_user = models.ForeignKey(User)
+    sub_cat = models.ForeignKey(Category)

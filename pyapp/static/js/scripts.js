@@ -4,71 +4,9 @@ $(document).ready(function () {
     viewPosts();
 
     $("#search").on("keyup", function () {
-        console.log($(this).val());
         search($(this).val())
     });
 
-    function viewCatList() {
-        $.ajax({
-            url: 'http://127.0.0.1:8000/allCats',
-            type: 'get',
-            success: function (response) {
-                data = JSON.parse(response);
-                cats = $("#cats");
-                cats.html("");
-                cats.append(cat_all())
-                $(data).each(function () {
-                    cats.append(category(this));
-                });
-            }
-        });
-    }
-
-    function search(term) {
-        console.log(term);
-        $.ajax({
-            url: 'http://127.0.0.1:8000/search/' + term,
-            type: 'get',
-            success: function (response) {
-                data = JSON.parse(response);
-                cats = $("#searchRes");
-                cats.html("");
-                $(data).each(function () {
-                    cats.append(searchRes(this));
-                });
-            }
-        });
-    }
-
-    function loadBaseURL() {
-
-        $.ajax({
-            url: 'http://127.0.0.1:8000/base/',
-            type: 'get',
-            success: function (response) {
-
-                baseurl = response.base_dir;
-                $("#baseurl").html(baseurl);
-
-            }
-        });
-    }
-
-    function viewPosts() {
-        $.ajax({
-            url: 'http://127.0.0.1:8000/allPosts',
-            type: 'get',
-            success: function (response) {
-                data = JSON.parse(response);
-                posts = $('#posts');
-                posts.html("");
-                $(data).each(function () {
-                    posts.append(post(this));
-                });
-
-            }
-        });
-    }
 
     $(document).on('click', '.post-image', function () {
         post_id = $(this).attr('post-no');
@@ -88,7 +26,6 @@ $(document).ready(function () {
         });
 
     });
-
     $(document).on('click', '.sreachel', function () {
         post_id = $(this).attr('post-no');
         $.ajax({
@@ -107,7 +44,6 @@ $(document).ready(function () {
         });
 
     });
-
     $(document).on('click', '.category', function () {
         cat_name = $(this).html();
         if ($(this).attr('val') === '0')
@@ -128,15 +64,13 @@ $(document).ready(function () {
             }
         });
     });
-
-
     $(document).on('click', '.sup', function (e) {
         self = this;
         cat_id = $(this).attr('data');
         //TODO dontforget to fix it #bug_1
         user_id = 1;
         $.ajax({
-            url: 'http://127.0.0.1:8000/sup/' + user_id + '/' + cat_id + '/',
+            url: 'http://127.0.0.1:8000/sup/' + cat_id + '/',
             type: 'get',
             success: function (response) {
                 if (response)
@@ -145,15 +79,12 @@ $(document).ready(function () {
             }
         });
     });
-
-
     $(document).on('click', '.unsup', function (e) {
         self = this;
         cat_id = $(this).attr('data');
         //TODO dontforget to fix it #bug_1
-        user_id = 1;
         $.ajax({
-            url: 'http://127.0.0.1:8000/unsup/' + user_id + '/' + cat_id + '/',
+            url: 'http://127.0.0.1:8000/unsup/' + cat_id + '/',
             type: 'get',
             success: function (response) {
                 if (response)
@@ -162,14 +93,11 @@ $(document).ready(function () {
             }
         });
     });
-
     $(document).on('click', '.cat_trigger', function () {
         setActiveMenuItem('.cat_trigger', this);
-        console.log($(this).attr("val"))
     });
     $(document).on('click', '.cat_trigger', function () {
         setActiveMenuItem('.cat_trigger', this);
-        console.log($(this).attr("val"))
     });
     /*
     $(document).on('click', '.CommentButton', function() {
@@ -199,8 +127,18 @@ $(document).ready(function () {
         return $("<br>")
     }
 
-    function category(cat) {
-        return $('<span class="cat_trigger list-group-item category" val="' + cat.pk + '" >' + cat.fields.cat_name +'</span> <button class="sup" data="'+cat.pk+'">Sup</button>')
+    function category(data) {
+        cat = JSON.parse(data.cat)[0]
+        console.log(data)
+        sup = "";
+        if (userState()) {
+            if (data.state)
+                sup = '<button class="sup btn-outline-danger" data="' + cat.pk + '">Unsup</button>';
+            else
+                sup = '<button class="sup btn-outline-primary" data="' + cat.pk + '">Sup</button>';
+        }
+
+        return $('<span class="cat_trigger list-group-item category" val="' + cat.pk + '" >' + cat.fields.cat_name + '</span> ' + sup)
     }
 
 
@@ -210,8 +148,6 @@ $(document).ready(function () {
 
 
     function post(data) {
-        console.log("post")
-        console.log(data)
         categorySpan = $('<span></span>');
         getCategory(data.fields.category, printCategoryname, categorySpan)
         post_div = $('  <div class="card mt-4">\n' +
@@ -240,17 +176,19 @@ $(document).ready(function () {
 
     function comments(data) {
         usernameSpan = $("<span></span>");
+        replay = "";
+        if (userState())
+            replay = '<form method="get">' +
+                '<textarea class="ReplyText"></textarea><br/>' +
+                '<button class="btn btn-success replyForm">Leave a Reply</button> ' +
+                '</form>';
         getUser(data.fields.username, printusername, usernameSpan);
         ret = $('<div class="card-body">\n' +
             '              <p>' + data.fields.text + '</p>\n' +
             '              <small class="text-muted">Commented by <span class="username"></span> on ' + data.fields.created_date + '</small>\n' +
             '<div>' +
             '<div comment-no="' + data.pk + '">' + Replys(data.fields.post, data.pk) + '</div>' +
-            '<div>' +
-            '<form method="get">' +
-            '<textarea class="ReplyText"></textarea><br/>' +
-            '<button class="btn btn-success replyForm">Leave a Reply</button> ' +
-            '</form>' +
+            '<div>' + replay +
             '</div>' +
             '</div>' +
             '              <hr>\n' +
@@ -286,25 +224,16 @@ $(document).ready(function () {
         });
     }
 
-    function base() {
-        return $("#baseurl").html();
+    function getCategory(cat_id, handle, element) {
+        $.ajax({
+            url: 'http://127.0.0.1:8000/category/' + cat_id + '/',
+            type: 'get',
+            success: function (response) {
+                data = JSON.parse(response)[0];
+                handle(data, element);
+            }
+        });
     }
-
-    http://127.0.0.1:8000/home/
-
-
-        function getCategory(cat_id, handle, element) {
-            $.ajax({
-                url: 'http://127.0.0.1:8000/category/' + cat_id + '/',
-                type: 'get',
-                success: function (response) {
-                    data = JSON.parse(response)[0];
-                    console.log(data);
-                    handle(data, element);
-                }
-            });
-        }
-
 
     function printusername(userObject, element) {
         $(element).append(data.fields.username);
@@ -315,6 +244,20 @@ $(document).ready(function () {
     }
 
     function postModal(data) {
+        like = "";
+        comment = "";
+        if (userState()) {
+            like = '<div class="card-body">' +
+                '<button class="btn-success like" post-no="' + data.pk + '">Like</button><input id="likeCounter" disabled />' +
+                '<button class="btn-danger dislike"  post-no="' + data.pk + '">DisLike</button><input id="dislikeCounter" disabled/>' +
+                '</div>';
+            comment = '<div class="modal-body" id="FormContiner">\n' +
+                '<form  method="get">' +
+                '<textarea class="CommentText"></textarea><br/>' +
+                '<button class="btn btn-success commentForm">Leave a Comment</button> ' +
+                '</form>' +
+                '            </div>\n';
+        }
         ret = $('<div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="Cart" aria-hidden="true">\n' +
             '    <div class="modal-dialog modal-lg" role="document">\n' +
             '        <div class="modal-content">\n' +
@@ -325,19 +268,11 @@ $(document).ready(function () {
             '                </button>\n' +
             '            </div>\n' +
             '            <div class="modal-body" id="postContiner">\n' +
-            '            </div>\n' +
-            '<div class="card-body">' +
-            '<button class="btn-success like" post-no="' + data.pk + '">Like</button><input id="likeCounter" disabled />' +
-            '<button class="btn-danger dislike"  post-no="' + data.pk + '">DisLike</button><input id="dislikeCounter" disabled/>' +
-            '</div>' +
+            '            </div>\n' + like +
             '            <div><div class="card-header">' +
             '              Post Comments </div>' +
             '            <div class="modal-body" id="FormContiner">\n' +
-            '<form  method="get">' +
-            '<textarea class="CommentText"></textarea><br/>' +
-            '<button class="btn btn-success commentForm">Leave a Comment</button> ' +
-            '</form>' +
-            '            </div>\n' +
+            '            </div>\n' + comment +
             '               <div  id="comments"></div>' +
             '             </div>' +
             '        </div>\n' +
@@ -444,7 +379,6 @@ $(document).ready(function () {
             url: 'http://127.0.0.1:8000/adddislike/' + post_id + '/',
             type: 'get',
             success: function (response) {
-                console.log(response);
                 if (response == 'deletePost') {
                     $('#postModal').modal('toggle');
                     viewPosts();
@@ -463,11 +397,75 @@ $(document).ready(function () {
             url: 'http://127.0.0.1:8000/dislikes/' + post_id + '/',
             type: 'get',
             success: function (response) {
-                console.log(response);
                 $('#dislikeCounter').val(response);
             }
         });
 
+    }
+
+    function userState() {
+        return $("#userstate").attr("state") == "True" ? true : false;
+    }
+
+    function viewCatList() {
+        $.ajax({
+            url: 'http://127.0.0.1:8000/allCats',
+            type: 'get',
+            success: function (response) {
+                data = JSON.parse(response);
+                cats = $("#cats");
+                cats.html("");
+                cats.append(cat_all())
+                $(data).each(function () {
+                    cats.append(category(this));
+                });
+            }
+        });
+    }
+
+    function search(term) {
+        $.ajax({
+            url: 'http://127.0.0.1:8000/search/' + term,
+            type: 'get',
+            success: function (response) {
+                data = JSON.parse(response);
+                cats = $("#searchRes");
+                cats.html("");
+                $(data).each(function () {
+                    cats.append(searchRes(this));
+                });
+            }
+        });
+    }
+
+    function loadBaseURL() {
+
+        $.ajax({
+            url: 'http://127.0.0.1:8000/base/',
+            type: 'get',
+            success: function (response) {
+
+                baseurl = response.base_dir;
+                $("#baseurl").html(baseurl);
+
+            }
+        });
+    }
+
+    function viewPosts() {
+        $.ajax({
+            url: 'http://127.0.0.1:8000/allPosts',
+            type: 'get',
+            success: function (response) {
+                data = JSON.parse(response);
+                posts = $('#posts');
+                posts.html("");
+                $(data).each(function () {
+                    posts.append(post(this));
+                });
+
+            }
+        });
     }
 
 });
