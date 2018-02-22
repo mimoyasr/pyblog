@@ -164,6 +164,18 @@ def post_new(request):
             return HttpResponseRedirect('/allposts')
     return render(request, 'post.html', {'form': form})
 
+def getPost(request, post_id):
+    post = Post.objects.get(id = post_id)
+    commentscount=Comment.objects.filter(post=post_id).count()
+    likescount=Likes.objects.filter(post=post_id).count()
+    dislikescount=Dislikes.objects.filter(post=post_id).count()
+    context = {"post":post,"commentscount":commentscount,"likescount":likescount,"dislikescount":dislikescount }
+    return render(request, "post_details.html", context)
+
+
+
+
+
 
 def Posts_edit(request, post_id):
     post = Post.objects.get(id=post_id)

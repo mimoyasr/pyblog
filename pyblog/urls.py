@@ -68,7 +68,8 @@ urlpatterns = [
     url(r'^post/(?P<post_id>[0-9]+)/edit', Posts_edit),
     url(r'^post/(?P<post_id>[0-9]+)/del', Post_delete),
     url(r'^index', admin),
-    url(r'base', base_dir)
+    url(r'base', base_dir),
+    url(r'^post/(?P<post_id>[0-9]+)',getPost),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
