@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 {% extends 'base.html' %}
 {% block main_block %}
   <div class="content-wrapper">
@@ -13,30 +14,30 @@
         <li class="breadcrumb-item active">Tables</li>
       </ol>
 
-      <a href="new/"><button type="button" class="btn btn-primary">Add New Category</button></a>
+      <a href="new/"><button type="button" class="btn btn-primary">Add New Tag</button></a>
       <br><br>
 
       <div class="card mb-3">
         <div class="card-header">
-          <i class="fa fa-table"></i> Categories </div>
+          <i class="fa fa-table"></i> Tags </div>
         <div class="card-body">
           <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
               <thead>
                 <tr>
-                  <th>Category Name</th>
+                  <th>Tag Name</th>
                   <th span="2">Actions</th>
                 </tr>
               </thead>
 
               <tbody>
-              {% for cat in allcategories %}
+              {% for tag in all_tags %}
                 <tr>
-                    <td>{{cat.cat_name}}</td>
+                    <td>{{tag.name}}</td>
 
                      <td>
-                         <a href="{{cat.id}}/update"><button type="button" class="btn btn-secondary"> Edit </button></a>
-                         <a href="{{cat.id}}/delete"><button type="button" class="btn btn-danger"> Delete </button></a>
+                         <a href="{{tag.id}}/update"><button type="button" class="btn btn-secondary"> Edit </button></a>
+                         <a href="{{tag.id}}/delete"><button type="button" class="btn btn-danger"> Delete </button></a>
                     </td>
                 </tr>
               {% endfor %}
@@ -52,6 +53,6 @@
     </div>
     <!-- /.container-fluid-->
     <!-- /.content-wrapper-->
-    {% endblock %}
+   {% endblock %}
 
 </html>

@@ -14,10 +14,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 from pyblog.db import DATABASES
 
-
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -37,7 +34,7 @@ LOGOUT_REDIRECT_URL = '/home'
 INSTALLED_APPS = (
     'pyapp',
     'admin',
-    #'corsheaders',
+    # 'corsheaders',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -63,7 +60,7 @@ ROOT_URLCONF = 'pyblog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': os.path.join(BASE_DIR,'/admin/templates/'),
+        'DIRS': os.path.join(BASE_DIR, '/admin/templates/'),
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -77,7 +74,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'pyblog.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -106,18 +102,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
-
-
-#this section has been replaced by a separit file db.py
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/1.8/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -129,12 +116,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
-STATIC_URL = os.path.join(BASE_DIR,'admin/static/')
+STATIC_URL = os.path.join(BASE_DIR, 'admin/static/')
 LOGIN_URL = '/login_form'
-MEDIA_URL='/admin/static/media/'
-MEDIA_ROOT=os.path.join(BASE_DIR, 'admin/static/media/')
-#AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBackend']
-#CORS_ORIGIN_ALLOW_ALL = True
+MEDIA_URL = '/admin/static/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'admin/static/media/')
+SESSION_SAVE_EVERY_REQUEST = True

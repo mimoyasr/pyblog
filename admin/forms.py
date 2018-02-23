@@ -7,13 +7,22 @@ class CategoryForm(forms.ModelForm):
         model = Category
         fields = ('cat_name',)
 
+
 class BadWordsForm(forms.ModelForm):
     class Meta:
         model = BadWords
         fields = ('word',)
 
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title', 'picture', 'content' ,'category','tags')
+        fields = ('title', 'picture', 'content', 'category', 'tags')
+
+
+class TagForm(forms.ModelForm):
+    class Meta:
+        model = Tag
+        fields = ('name',)
+
 

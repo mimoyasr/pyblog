@@ -16,17 +16,19 @@
     <!-- Custom styles for this template -->
     <link href="{% static 'css/shop-item.css' %}" rel="stylesheet">
     <style>
-        #searchRes{
+        #searchRes {
             position: absolute;
             background-color: #c6c8ca;
             list-style: none;
             width: 25%;
 
         }
-        #searchRes li{
+
+        #searchRes li {
             height: 30px;
         }
-        #searchRes li:hover{
+
+        #searchRes li:hover {
             background-color: #ffffff;
 
         }
@@ -55,21 +57,15 @@
 
 
                 {% if user %}
+                    {% if admin %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/index">admin page</a>
+                        </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">logout</a>
                     </li>
-
-                {% endif %}
-                {% if admin %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/index">admin page</a>
-                    </li>
-
-                {% endif %}
-
-            </ul>
-            {% if not user %}
-                <ul class="navbar-nav ml-auto">
+                {% else %}
                     <li class="nav-item active">
                         <a class="nav-link" href="/login_form">Login
                             <!-- <span class="sr-only">(current)</span> -->
@@ -78,8 +74,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/signup">Register</a>
                     </li>
-                </ul>
-            {% endif %}
+                {% endif %}
+
+            </ul>
+
         </div>
     </div>
 </nav>
@@ -90,7 +88,7 @@
     <div class="row">
 
         <div class="col-lg-3">
-            <h1 class="my-4">Categories</h1>
+            <h1 class="my-4"></h1>
             <div id="cats" class="list-group">
 
             </div>
@@ -113,6 +111,7 @@
 
 </div>
 <div id="baseurl" class="invisible"></div>
+<div id="userstate" class="invisible" state="{{ user }}"></div>
 <script type="text/javascript">
 </script>
 <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>

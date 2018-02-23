@@ -38,8 +38,8 @@ urlpatterns = [
     url(r'^addcomment/(?P<text>[a-zA-Z0-9_ ]+)/(?P<post>[0-9]+)/$', add_comment),
     url(r'^reply/(?P<post_id>[0-9]+)/(?P<comment_id>[0-9]+)/$', show_reply),
     url(r'^addreply/(?P<text>[a-zA-Z0-9_ ]+)/(?P<post_id>[0-9]+)/(?P<comment_id>[0-9]+)$', add_reply),
-    url(r'^unsup/(?P<user_id>[0-9]+)/(?P<cat_id>[0-9]+)/', un_sup),
-    url(r'^sup/(?P<user_id>[0-9]+)/(?P<cat_id>[0-9]+)/', sup),
+    url(r'^unsup/(?P<cat_id>[0-9]+)/', un_sup),
+    url(r'^sup/(?P<cat_id>[0-9]+)/', sup),
     url(r'^allCats/(?P<name>[a-z]+)/$', post_by_category),
     url(r'^allPosts$', all_posts),
     url(r'^category/(?P<cat_id>[0-9]+)/$', get_category),
@@ -54,6 +54,8 @@ urlpatterns = [
     url(r'^(?P<usr_id>[0-9]+)/update', user_update),
     url(r'^user/new', user_new),
     url(r'^allcategories/$', allCategories),
+    url(r'^alltags/$', allTags),
+    url(r'^alltags/new', tag_new),
     url(r'^allcategories/new/$', category_new),
     url(r'^allcategories/(?P<cat_id>[0-9]+)/update', category_update),
     url(r'^allcategories/(?P<cat_id>[0-9]+)/delete', category_delete),
@@ -66,7 +68,8 @@ urlpatterns = [
     url(r'^post/(?P<post_id>[0-9]+)/edit', Posts_edit),
     url(r'^post/(?P<post_id>[0-9]+)/del', Post_delete),
     url(r'^index', admin),
-    url(r'base', base_dir)
+    url(r'base', base_dir),
+    url(r'^post/(?P<post_id>[0-9]+)',getPost),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

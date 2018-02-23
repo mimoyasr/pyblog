@@ -6,11 +6,11 @@
 {% block main_block %}
  <div class="container">
 	<div class="card card-register mx-auto mt-5">
-      <div class="card-header">Add Post</div>
+      <div class="card-header">Add New Tag</div>
       <div class="card-body">
-<form method="POST" enctype="multipart/form-data">{% csrf_token %}
+<form method="POST">{% csrf_token %}
 {{ form.as_p }}
-<button type="submit" class="btn btn-primary" >create post</button>
+<button type="submit" class="btn btn-primary" >Save</button>
 </form>
 </div>
 </div>
